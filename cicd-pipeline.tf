@@ -1,5 +1,5 @@
 resource "aws_codebuild_project" "tf-plan" {
-  name          = "tf-cicd-plan2"
+  name          = "tf-cicd-plan"
   description   = "Plan stage for terraform"
   service_role  = aws_iam_role.tf-codebuild-role.arn
 
@@ -69,9 +69,9 @@ resource "aws_codepipeline" "cicd_pipeline" {
             version = "1"
             output_artifacts = ["tf-code"]
             configuration = {
-                FullRepositoryId = "davoclock/aws-cicd-pipeline"
+                FullRepositoryId = "tycloud97/vietaws-devops-demo"
                 BranchName   = "master"
-                ConnectionArn = var.codestar_connector_credentials
+                ConnectionArn = "arn:aws:codestar-connections:us-east-1:661779315943:connection/4d159a96-9097-47bc-8e67-c6a0988bea4a"
                 OutputArtifactFormat = "CODE_ZIP"
             }
         }
