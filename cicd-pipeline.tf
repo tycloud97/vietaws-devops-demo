@@ -71,7 +71,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
             configuration = {
                 FullRepositoryId = "tycloud97/vietaws-devops-demo"
                 BranchName   = "master"
-                ConnectionArn = "arn:aws:codestar-connections:us-east-1:661779315943:connection/4d159a96-9097-47bc-8e67-c6a0988bea4a"
+                ConnectionArn = "arn:aws:codestar-connections:ap-southeast-1:827539266883:connection/7c06853c-723a-4883-a8c7-d396c7f9e3b2"
                 OutputArtifactFormat = "CODE_ZIP"
             }
         }
