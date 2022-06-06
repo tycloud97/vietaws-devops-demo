@@ -66,7 +66,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
             category = "Source"
             owner = "AWS"
             provider = "CodeStarSourceConnection"
-            version = "2"
+            version = "1"
             output_artifacts = ["tf-code"]
             configuration = {
                 FullRepositoryId = "tycloud97/vietaws-devops-demo"
