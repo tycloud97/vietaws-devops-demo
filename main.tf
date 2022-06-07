@@ -10,12 +10,12 @@ terraform {
       version = "~> 3.27"
     }
   }
-    backend "s3" {
-        bucket = "827539266883-terraform-state"
-        encrypt = true
-        key = "terraform.tfstate"
-        region = "ap-southeast-1"
-    }
+  backend "s3" {
+    bucket  = "827539266883-terraform-state"
+    encrypt = true
+    key     = "terraform.tfstate"
+    region  = "ap-southeast-1"
+  }
   required_version = ">= 0.14.9"
 }
 
@@ -30,13 +30,13 @@ module "cicd_front_end" {
 
 
 module "cicd_webhook" {
-  source                     = "./tf_modules/codepipeline-git-webhook"
-  name                       = "webhook-tf-cicd"
-  stage                      = "main"
-  
+  source = "./tf_modules/codepipeline-git-webhook"
+  name   = "webhook-tf-cicd"
+  stage  = "main"
+
   github_repositories        = ["vietaws-devops-demo"]
   github_default_branch_name = "main"
-  
-  webhook_secret             = "AAABBBCCCDDD"
-  codebuild_target_pipeline  = "tf-cicd"
+
+  webhook_secret            = "AAABBBCCCDDD"
+  codebuild_target_pipeline = "tf-cicd"
 }
