@@ -32,10 +32,10 @@ module "cicd_front_end" {
 module "cicd_webhook" {
   source                     = "./tf_modules/codepipeline-git-webhook"
   name                       = "webhook-tf-cicd"
-  stage                      = "master"
+  stage                      = "main"
   
   github_repositories        = ["vietaws-devops-demo"]
-  github_default_branch_name = "master"
+  github_default_branch_name = "main"
   
   webhook_secret             = "AAABBBCCCDDD"
   codebuild_target_pipeline  = "tf-cicd"
