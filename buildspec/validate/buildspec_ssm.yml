@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Validating AMI ID"
+      - cd $CODEBUILD_SRC_DIR_build_output
+      - "export AMI_IDEN=$(cat ami_id.txt)"
+      - echo $AMI_IDEN
+  build:
+    commands:
+      - echo "Storing AMI-ID in SSM Parameter Store"
+      - aws ssm put-parameter --name "/demo/ec2/ami/latest" --value $AMI_IDEN --overwrite
+  post_build:
+    commands:
+      - aws ssm get-parameter --name "/demo/ec2/ami/latest"
