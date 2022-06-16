@@ -43,17 +43,6 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
                         },
                         {
                             "Action": [
-                                "codecommit:CancelUploadArchive",
-                                "codecommit:GetBranch",
-                                "codecommit:GetCommit",
-                                "codecommit:GetUploadArchiveStatus",
-                                "codecommit:UploadArchive"
-                            ],
-                            "Resource": "${aws_codecommit_repository.codecommit.arn}",
-                            "Effect": "Allow"
-                        },
-                        {
-                            "Action": [
                                 "codedeploy:CreateDeployment",
                                 "codedeploy:GetApplication",
                                 "codedeploy:GetApplicationRevision",
@@ -178,30 +167,30 @@ EOF
 }
 
 
-resource "aws_cloudwatch_event_rule" "codecommit_rule" {
-  name        = "viet-aws-codecommit-${var.app_name}"
-  description = "Event Rule for any commit to codecommit of Bookstore App - ${var.app_name}"
+# resource "aws_cloudwatch_event_rule" "codecommit_rule" {
+#   name        = "viet-aws-codecommit-${var.app_name}"
+#   description = "Event Rule for any commit to codecommit of Bookstore App - ${var.app_name}"
 
-  event_pattern = <<EOF
-{
-  "source": ["aws.codecommit"],
-  "detail-type": ["CodeCommit Repository State Change"],
-  "resources": ["${aws_codecommit_repository.codecommit.arn}"],
-  "detail": {
-   "event": ["referenceCreated","referenceUpdated"],
-   "referenceType": ["branch"],
-   "referenceName": ["${var.code_commit_branch}"]
-   }
-}
-EOF
-}
+#   event_pattern = <<EOF
+# {
+#   "source": ["aws.codecommit"],
+#   "detail-type": ["CodeCommit Repository State Change"],
+#   "resources": ["${aws_codecommit_repository.codecommit.arn}"],
+#   "detail": {
+#    "event": ["referenceCreated","referenceUpdated"],
+#    "referenceType": ["branch"],
+#    "referenceName": ["${var.code_commit_branch}"]
+#    }
+# }
+# EOF
+# }
 
-resource "aws_cloudwatch_event_target" "codecommit_rule_target" {
-  rule      = aws_cloudwatch_event_rule.codecommit_rule.name
-  target_id = "TriggerCodePipeline"
-  arn       = aws_codepipeline.codepipeline.arn
-  role_arn  = aws_iam_role.cloudwatch_target_role.arn
-}
+# resource "aws_cloudwatch_event_target" "codecommit_rule_target" {
+#   rule      = aws_cloudwatch_event_rule.codecommit_rule.name
+#   target_id = "TriggerCodePipeline"
+#   arn       = aws_codepipeline.codepipeline.arn
+#   role_arn  = aws_iam_role.cloudwatch_target_role.arn
+# }
 
 resource "aws_iam_role" "cloudwatch_target_role" {
   name = "cloudwatchtarget-${var.app_name}"
@@ -253,7 +242,7 @@ resource "aws_codepipeline" "codepipeline" {
       name             = "Source"
       category         = "Source"
       owner            = "AWS"
-      provider         = "CodeCommit"
+      provider         = "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["SourceArtifact"]
       region           = data.aws_region.current.name
@@ -328,6 +317,8 @@ resource "aws_codepipeline" "codepipeline" {
       configuration = {
         ProjectName = aws_codebuild_project.codebuildproddeployment.name
       }
+
+   
       region    = data.aws_region.current.name
       namespace = "DeployProductionVariables"
     }

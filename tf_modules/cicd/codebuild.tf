@@ -18,8 +18,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "codebuild_policy" {
-  role = aws_iam_role.codebuild_iam.name
-  name = "codebuild-policy-${var.app_name}"
+  role   = aws_iam_role.codebuild_iam.name
+  name   = "codebuild-policy-${var.app_name}"
   policy = <<POLICY
 {
                     "Version": "2012-10-17",
@@ -67,15 +67,6 @@ resource "aws_iam_role_policy" "codebuild_policy" {
                         },
                         {
                             "Effect": "Allow",
-                            "Resource": [
-                                     "${aws_codecommit_repository.codecommit.arn}"
-                            ],
-                            "Action": [
-                                "codecommit:GitPull"
-                            ]
-                        },
-                        {
-                            "Effect": "Allow",
                             "Action": [
                                 "codebuild:CreateReportGroup",
                                 "codebuild:CreateReport",
@@ -91,13 +82,13 @@ POLICY
 
 
 resource "aws_codebuild_project" "codebuild" {
-  name          = "viet-aws-${var.app_name}"
-  description   = "CodeBuild project for the App- ${var.app_name}"
-  build_timeout = "60"
+  name           = "viet-aws-${var.app_name}"
+  description    = "CodeBuild project for the App- ${var.app_name}"
+  build_timeout  = "60"
   queued_timeout = "480"
-  service_role  = aws_iam_role.codebuild_iam.arn
+  service_role   = aws_iam_role.codebuild_iam.arn
   artifacts {
-    type = "NO_ARTIFACTS"
+    type = "CODEPIPELINE"
   }
   badge_enabled = false
   environment {
@@ -115,12 +106,11 @@ resource "aws_codebuild_project" "codebuild" {
     #   value = data.aws_region.current.name
     # }
   }
-  source {
-    type            = "CODECOMMIT"
-    location        = aws_codecommit_repository.codecommit.clone_url_http
-    buildspec       = var.buildspec_location
-  }
-  source_version    = var.code_commit_branch
+source {
+          type = "CODEPIPELINE"
+          buildspec = "buildspec.yml"
+        }
+  source_version = var.code_commit_branch
   tags = {
     Environment = "dev"
   }
@@ -128,13 +118,13 @@ resource "aws_codebuild_project" "codebuild" {
 
 
 resource "aws_codebuild_project" "codebuilddevdeployment" {
-  name          = "viet-aws-development-deploy-${var.app_name}"
-  description   = "CodeBuild project for Deployment the App- ${var.app_name} in Development Namespace."
-  build_timeout = "60"
+  name           = "viet-aws-development-deploy-${var.app_name}"
+  description    = "CodeBuild project for Deployment the App- ${var.app_name} in Development Namespace."
+  build_timeout  = "60"
   queued_timeout = "480"
-  service_role  = aws_iam_role.codebuild_iam.arn
+  service_role   = aws_iam_role.codebuild_iam.arn
   artifacts {
-    type = "NO_ARTIFACTS"
+    type = "CODEPIPELINE"
   }
   badge_enabled = false
   environment {
@@ -160,12 +150,13 @@ resource "aws_codebuild_project" "codebuilddevdeployment" {
       value = var.service_account_dev_role_arn
     }
   }
+
   source {
-    type            = "CODECOMMIT"
-    location        = aws_codecommit_repository.codecommit.clone_url_http
-    buildspec       = var.devdeployspec_location
+    type      = "CODEPIPELINE"
+    buildspec = "buildspec.yml"
   }
-  source_version    = var.code_commit_branch
+
+  source_version = var.code_commit_branch
   tags = {
     Environment = "dev"
   }
@@ -173,13 +164,13 @@ resource "aws_codebuild_project" "codebuilddevdeployment" {
 
 
 resource "aws_codebuild_project" "codebuildproddeployment" {
-  name          = "viet-aws-prod-deploy-${var.app_name}"
-  description   = "CodeBuild project for Deployment the App- ${var.app_name} in Prodcution Namespace."
-  build_timeout = "60"
+  name           = "viet-aws-prod-deploy-${var.app_name}"
+  description    = "CodeBuild project for Deployment the App- ${var.app_name} in Prodcution Namespace."
+  build_timeout  = "60"
   queued_timeout = "480"
-  service_role  = aws_iam_role.codebuild_iam.arn
+  service_role   = aws_iam_role.codebuild_iam.arn
   artifacts {
-    type = "NO_ARTIFACTS"
+    type = "CODEPIPELINE"
   }
   badge_enabled = false
   environment {
@@ -206,11 +197,10 @@ resource "aws_codebuild_project" "codebuildproddeployment" {
     }
   }
   source {
-    type            = "CODECOMMIT"
-    location        = aws_codecommit_repository.codecommit.clone_url_http
-    buildspec       = var.proddeployspec_location
+    type      = "CODEPIPELINE"
+    buildspec = "buildspec.yml"
   }
-  source_version    = var.code_commit_branch
+  source_version = var.code_commit_branch
   tags = {
     Environment = "prod"
   }
