@@ -18,8 +18,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "codepipeline_policy" {
-  name = "codepipeline-${var.app_name}"
-  role = aws_iam_role.codepipeline_role.id
+  name   = "codepipeline-${var.app_name}"
+  role   = aws_iam_role.codepipeline_role.id
   policy = <<EOF
 {
                     "Version": "2012-10-17",
@@ -223,8 +223,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "cloudwatch_target_role_policy" {
-  name = "cloudwatchtarget-${var.app_name}"
-  role = aws_iam_role.cloudwatch_target_role.id
+  name   = "cloudwatchtarget-${var.app_name}"
+  role   = aws_iam_role.cloudwatch_target_role.id
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -260,9 +260,10 @@ resource "aws_codepipeline" "codepipeline" {
       namespace        = "SourceVariables"
       run_order        = 1
       configuration = {
-        PollForSourceChanges    = false
-        RepositoryName = aws_codecommit_repository.codecommit.repository_name
-        BranchName       = var.code_commit_branch 
+        FullRepositoryId     = "tycloud97/vietaws-devops-demo"
+        BranchName           = "master"
+        ConnectionArn        = "arn:aws:codestar-connections:ap-southeast-1:827539266883:connection/bb6244c5-3938-42f7-a897-42c58212d5ef"
+        OutputArtifactFormat = "CODE_ZIP"
       }
     }
   }
@@ -282,8 +283,8 @@ resource "aws_codepipeline" "codepipeline" {
       configuration = {
         ProjectName = aws_codebuild_project.codebuild.name
       }
-      region           = data.aws_region.current.name
-      namespace        = "BuildVariables"
+      region    = data.aws_region.current.name
+      namespace = "BuildVariables"
     }
   }
   stage {
@@ -301,19 +302,19 @@ resource "aws_codepipeline" "codepipeline" {
       configuration = {
         ProjectName = aws_codebuild_project.codebuilddevdeployment.name
       }
-      region           = data.aws_region.current.name
-      namespace        = "DeployVariables"
+      region    = data.aws_region.current.name
+      namespace = "DeployVariables"
     }
   }
   stage {
     name = "DeployProd"
     action {
-      name             = "ApproveProdDeployment"
-      category         = "Approval"
-      owner            = "AWS"
-      provider         = "Manual"
-      version          = "1"
-      run_order        = 1
+      name      = "ApproveProdDeployment"
+      category  = "Approval"
+      owner     = "AWS"
+      provider  = "Manual"
+      version   = "1"
+      run_order = 1
     }
     action {
       name             = "DeployDevelopment"
@@ -327,8 +328,8 @@ resource "aws_codepipeline" "codepipeline" {
       configuration = {
         ProjectName = aws_codebuild_project.codebuildproddeployment.name
       }
-      region           = data.aws_region.current.name
-      namespace        = "DeployProductionVariables"
+      region    = data.aws_region.current.name
+      namespace = "DeployProductionVariables"
     }
   }
 }
