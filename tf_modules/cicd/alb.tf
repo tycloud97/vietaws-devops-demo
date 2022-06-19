@@ -19,7 +19,7 @@ resource "aws_lb_target_group" "tg" {
     port = 80
   }
 
-  # deregistration_delay = 60
+  deregistration_delay = 0
 }
 
 resource "aws_lb_listener" "alb_listener" {
