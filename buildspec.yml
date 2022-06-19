@@ -18,3 +18,4 @@ artifacts:
     - scripts/install_dependencies
     - scripts/start_server
     - scripts/stop_server
+    - scripts/replace_ip
