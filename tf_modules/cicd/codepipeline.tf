@@ -170,7 +170,7 @@ resource "aws_codepipeline" "codepipeline" {
       category         = "Deploy"
       owner            = "AWS"
       provider         = "CodeDeploy"
-      input_artifacts  = ["SourceArtifact"]
+      input_artifacts  = ["BuildArtifact"]
       version          = "1"
       run_order        = 1
       configuration = {
