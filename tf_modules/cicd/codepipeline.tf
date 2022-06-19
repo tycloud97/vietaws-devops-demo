@@ -172,7 +172,7 @@ resource "aws_codepipeline" "codepipeline" {
       provider         = "CodeDeploy"
       input_artifacts  = ["SourceArtifact"]
       version          = "1"
-      run_order        = 2
+      run_order        = 1
       configuration = {
         ApplicationName = "myproject-App"
         DeploymentGroupName = "myproject-DG"

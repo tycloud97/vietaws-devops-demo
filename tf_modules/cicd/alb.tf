@@ -15,15 +15,11 @@ resource "aws_lb_target_group" "tg" {
   vpc_id = aws_default_vpc.default.id
 
 
-  stickiness {
-      type = "lb_cookie"
-  }
-
   health_check {
     port = 80
   }
 
-  deregistration_delay = 60
+  # deregistration_delay = 60
 }
 
 resource "aws_lb_listener" "alb_listener" {
