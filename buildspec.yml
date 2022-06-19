@@ -5,6 +5,7 @@ phases:
       - cat index.html
   build:
     commands:
+      - printenv
       - sed -i -e "s/{{CODEBUILD_BUILD_NUMBER}}/$CODEBUILD_BUILD_NUMBER/g" index.html
   post_build:
     commands:
