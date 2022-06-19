@@ -26,140 +26,10 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
                     "Statement": [
                         {
                             "Action": [
-                                "iam:PassRole"
-                            ],
-                            "Resource": "*",
-                            "Effect": "Allow",
-                            "Condition": {
-                                "StringEqualsIfExists": {
-                                    "iam:PassedToService": [
-                                        "cloudformation.amazonaws.com",
-                                        "elasticbeanstalk.amazonaws.com",
-                                        "ec2.amazonaws.com",
-                                        "ecs-tasks.amazonaws.com"
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "Action": [
-                                "codedeploy:CreateDeployment",
-                                "codedeploy:GetApplication",
-                                "codedeploy:GetApplicationRevision",
-                                "codedeploy:GetDeployment",
-                                "codedeploy:GetDeploymentConfig",
-                                "codedeploy:RegisterApplicationRevision"
+                                "*"
                             ],
                             "Resource": "*",
                             "Effect": "Allow"
-                        },
-                        {
-                            "Action": [
-                                "elasticbeanstalk:*",
-                                "ec2:*",
-                                "elasticloadbalancing:*",
-                                "autoscaling:*",
-                                "cloudwatch:*",
-                                "s3:*",
-                                "sns:*",
-                                "cloudformation:*",
-                                "rds:*",
-                                "sqs:*",
-                                "ecs:*"
-                            ],
-                            "Resource": "*",
-                            "Effect": "Allow"
-                        },
-                        {
-                            "Action": [
-                                "lambda:InvokeFunction",
-                                "lambda:ListFunctions"
-                            ],
-                            "Resource": "*",
-                            "Effect": "Allow"
-                        },
-                        {
-                            "Action": [
-                                "opsworks:CreateDeployment",
-                                "opsworks:DescribeApps",
-                                "opsworks:DescribeCommands",
-                                "opsworks:DescribeDeployments",
-                                "opsworks:DescribeInstances",
-                                "opsworks:DescribeStacks",
-                                "opsworks:UpdateApp",
-                                "opsworks:UpdateStack"
-                            ],
-                            "Resource": "*",
-                            "Effect": "Allow"
-                        },
-                        {
-                            "Action": [
-                                "cloudformation:CreateStack",
-                                "cloudformation:DeleteStack",
-                                "cloudformation:DescribeStacks",
-                                "cloudformation:UpdateStack",
-                                "cloudformation:CreateChangeSet",
-                                "cloudformation:DeleteChangeSet",
-                                "cloudformation:DescribeChangeSet",
-                                "cloudformation:ExecuteChangeSet",
-                                "cloudformation:SetStackPolicy",
-                                "cloudformation:ValidateTemplate"
-                            ],
-                            "Resource": "*",
-                            "Effect": "Allow"
-                        },
-                        {
-                            "Action": [
-                                "codebuild:BatchGetBuilds",
-                                "codebuild:StartBuild"
-                            ],
-                            "Resource": "*",
-                            "Effect": "Allow"
-                        },
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "devicefarm:ListProjects",
-                                "devicefarm:ListDevicePools",
-                                "devicefarm:GetRun",
-                                "devicefarm:GetUpload",
-                                "devicefarm:CreateUpload",
-                                "devicefarm:ScheduleRun"
-                            ],
-                            "Resource": "*"
-                        },
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "servicecatalog:ListProvisioningArtifacts",
-                                "servicecatalog:CreateProvisioningArtifact",
-                                "servicecatalog:DescribeProvisioningArtifact",
-                                "servicecatalog:DeleteProvisioningArtifact",
-                                "servicecatalog:UpdateProduct"
-                            ],
-                            "Resource": "*"
-                        },
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "cloudformation:ValidateTemplate"
-                            ],
-                            "Resource": "*"
-                        },
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "ecr:DescribeImages"
-                            ],
-                            "Resource": "*"
-                        },
-                        {
-                            "Effect": "Allow",
-                            "Action": "s3:*",
-                            "Resource": [
-                               "${aws_s3_bucket.codepipeline_bucket.arn}",
-                               "${aws_s3_bucket.codepipeline_bucket.arn}/*"
-                            ]
                         }
                     ]
                 }
@@ -294,7 +164,24 @@ resource "aws_codepipeline" "codepipeline" {
       region    = data.aws_region.current.name
       namespace = "DeployVariables"
     }
+
+    action {
+      name             = "DeployCodePipeline"
+      category         = "Deploy"
+      owner            = "AWS"
+      provider         = "CodeDeploy"
+      input_artifacts  = ["SourceArtifact"]
+      version          = "1"
+      run_order        = 2
+      configuration = {
+        ApplicationName = "myproject-App"
+        DeploymentGroupName = "myproject-DG"
+      }
+      region    = data.aws_region.current.name
+    }
   }
+
+
   stage {
     name = "DeployProd"
     action {

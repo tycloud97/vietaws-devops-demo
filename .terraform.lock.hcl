@@ -40,6 +40,13 @@ provider "registry.terraform.io/hashicorp/random" {
   ]
 }
 
+provider "registry.terraform.io/hashicorp/template" {
+  version = "2.2.0"
+  hashes = [
+    "h1:4qczEvf+QmrhBvuT1Z3sywobEFp1Vkmv4FBrUKhPvPE=",
+  ]
+}
+
 provider "registry.terraform.io/integrations/github" {
   version     = "4.26.0"
   constraints = "~> 4.0"

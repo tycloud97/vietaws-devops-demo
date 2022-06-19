@@ -17,34 +17,52 @@ data "aws_ami" "amazon-linux-2" {
 
 }
 
-resource "aws_instance" "main" {
-  ami                  = data.aws_ami.amazon-linux-2.id
-  instance_type        = var.instance_type
-  key_name             = aws_key_pair.main.key_name
-  iam_instance_profile = aws_iam_instance_profile.main.name
 
-  vpc_security_group_ids = [
-    "${aws_security_group.http.id}",
-    "${aws_security_group.ssh.id}",
-    "${aws_security_group.allow_all_outbound.id}",
-  ]
+data "aws_ami" "ubuntu" {
 
-  tags = {
-    Name = "CodeDeployDemo"
-  }
+    most_recent = true
 
-  provisioner "remote-exec" {
-    script = "./install_codedeploy_agent.sh"
-
-    connection {
-      host        = self.public_ip
-      agent       = false
-      type        = "ssh"
-      user        = "ec2-user"
-      private_key = file(var.private_key_path)
+    filter {
+        name   = "name"
+        values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
     }
-  }
+
+    filter {
+        name = "virtualization-type"
+        values = ["hvm"]
+    }
+
+    owners = ["099720109477"]
 }
+
+# resource "aws_instance" "main" {
+#   ami                  = data.aws_ami.amazon-linux-2.id
+#   instance_type        = var.instance_type
+#   key_name             = aws_key_pair.main.key_name
+#   iam_instance_profile = aws_iam_instance_profile.main.name
+
+#   vpc_security_group_ids = [
+#     "${aws_security_group.http.id}",
+#     "${aws_security_group.ssh.id}",
+#     "${aws_security_group.allow_all_outbound.id}",
+#   ]
+
+#   tags = {
+#     Name = "CodeDeployDemo"
+#   }
+
+#   provisioner "remote-exec" {
+#     script = "./install_codedeploy_agent.sh"
+
+#     connection {
+#       host        = self.public_ip
+#       agent       = false
+#       type        = "ssh"
+#       user        = "ec2-user"
+#       private_key = file(var.private_key_path)
+#     }
+#   }
+# }
 
 resource "aws_security_group" "http" {
   name        = "allow-http"
