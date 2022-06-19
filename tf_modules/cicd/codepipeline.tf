@@ -149,21 +149,21 @@ resource "aws_codepipeline" "codepipeline" {
   stage {
     name = "DeployDevelopment"
 
-    action {
-      name             = "DeployDevelopment"
-      category         = "Build"
-      owner            = "AWS"
-      provider         = "CodeBuild"
-      input_artifacts  = ["SourceArtifact"]
-      output_artifacts = ["DeployArtifact"]
-      version          = "1"
-      run_order        = 1
-      configuration = {
-        ProjectName = aws_codebuild_project.codebuilddevdeployment.name
-      }
-      region    = data.aws_region.current.name
-      namespace = "DeployVariables"
-    }
+    # action {
+    #   name             = "DeployDevelopment"
+    #   category         = "Build"
+    #   owner            = "AWS"
+    #   provider         = "CodeBuild"
+    #   input_artifacts  = ["SourceArtifact"]
+    #   output_artifacts = ["DeployArtifact"]
+    #   version          = "1"
+    #   run_order        = 1
+    #   configuration = {
+    #     ProjectName = aws_codebuild_project.codebuilddevdeployment.name
+    #   }
+    #   region    = data.aws_region.current.name
+    #   namespace = "DeployVariables"
+    # }
 
     action {
       name             = "DeployCodePipeline"
