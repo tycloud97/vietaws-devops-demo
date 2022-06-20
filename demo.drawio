@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2022-06-20T08:07:41.513Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36" etag="O9FWtghxaCD0FTf3fZzo" version="20.0.1" type="github">
+<mxfile host="app.diagrams.net" modified="2022-06-20T08:14:02.763Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36" etag="8aQf8niGKQbn8jjZyioe" version="20.0.1" type="github">
   <diagram id="ejOiZszBdOkqf7VxwGNQ" name="Page-1">
-    <mxGraphModel dx="4192" dy="1748" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="3155" dy="1206" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -49,7 +49,7 @@
         <mxCell id="KpB_KngCnUkT5IyetJgM-2" value="Source code&lt;br&gt;(Code Commit)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="-735" y="248" width="100" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="dyizjhoTMHPbMdRWWlDq-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KpB_KngCnUkT5IyetJgM-3" target="dyizjhoTMHPbMdRWWlDq-2">
+        <mxCell id="dyizjhoTMHPbMdRWWlDq-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="KpB_KngCnUkT5IyetJgM-3" target="dyizjhoTMHPbMdRWWlDq-2" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="-362" y="202" />
@@ -195,7 +195,7 @@
         <mxCell id="KpB_KngCnUkT5IyetJgM-56" value="Deploy Application Pipeline" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="-392" y="110" width="170" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="KpB_KngCnUkT5IyetJgM-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.03;entryY=0.09;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" target="KpB_KngCnUkT5IyetJgM-99" edge="1" source="KpB_KngCnUkT5IyetJgM-69">
+        <mxCell id="KpB_KngCnUkT5IyetJgM-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.03;entryY=0.09;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="KpB_KngCnUkT5IyetJgM-69" target="KpB_KngCnUkT5IyetJgM-99" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-784" y="641.25" as="sourcePoint" />
           </mxGeometry>
@@ -209,8 +209,8 @@
         <mxCell id="KpB_KngCnUkT5IyetJgM-63" value="Terraform Plan Dev&lt;br&gt;(CodeBuild)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="-683" y="687.25" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="KpB_KngCnUkT5IyetJgM-68" value="Deploy Application Pipeline" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="-442" y="549" width="170" height="20" as="geometry" />
+        <mxCell id="KpB_KngCnUkT5IyetJgM-68" value="Deploy Infrastructure Pipeline" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="-452" y="549" width="190" height="20" as="geometry" />
         </mxCell>
         <mxCell id="KpB_KngCnUkT5IyetJgM-69" value="" style="dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.weblogos.github;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="-840" y="589" width="75" height="75" as="geometry" />
@@ -239,7 +239,7 @@
         <mxCell id="KpB_KngCnUkT5IyetJgM-79" value="Terraform Apply Staging&lt;br&gt;(CodeBuild)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="-309" y="836" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="dyizjhoTMHPbMdRWWlDq-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KpB_KngCnUkT5IyetJgM-81" target="KpB_KngCnUkT5IyetJgM-100">
+        <mxCell id="dyizjhoTMHPbMdRWWlDq-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="KpB_KngCnUkT5IyetJgM-81" target="KpB_KngCnUkT5IyetJgM-100" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="-332" y="636" />
@@ -310,7 +310,7 @@
         <mxCell id="KpB_KngCnUkT5IyetJgM-114" value="Deploy Prod&lt;br&gt;(CodeDeploy)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="-18" y="250" width="90" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="dyizjhoTMHPbMdRWWlDq-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="dyizjhoTMHPbMdRWWlDq-2" target="KpB_KngCnUkT5IyetJgM-110">
+        <mxCell id="dyizjhoTMHPbMdRWWlDq-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="dyizjhoTMHPbMdRWWlDq-2" target="KpB_KngCnUkT5IyetJgM-110" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="-162" y="195" />
@@ -318,7 +318,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="dyizjhoTMHPbMdRWWlDq-2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" vertex="1" parent="1">
+        <mxCell id="dyizjhoTMHPbMdRWWlDq-2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" parent="1" vertex="1">
           <mxGeometry x="-348" y="150" width="126" height="270" as="geometry" />
         </mxCell>
       </root>
