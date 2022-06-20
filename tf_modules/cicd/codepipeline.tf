@@ -105,6 +105,28 @@ resource "aws_codepipeline" "codepipeline" {
     location = aws_s3_bucket.codepipeline_bucket.bucket
     type     = "S3"
   }
+  # stage {
+  #   name = "Source"
+
+  #   action {
+  #     name             = "Source"
+  #     category         = "Source"
+  #     owner            = "AWS"
+  #     provider         = "CodeStarSourceConnection"
+  #     version          = "1"
+  #     output_artifacts = ["SourceArtifact"]
+  #     region           = data.aws_region.current.name
+  #     namespace        = "SourceVariables"
+  #     run_order        = 1
+  #     configuration = {
+  #       FullRepositoryId     = "tycloud97/vietaws-devops-demo"
+  #       BranchName           = "master"
+  #       ConnectionArn        = "arn:aws:codestar-connections:ap-southeast-1:827539266883:connection/bb6244c5-3938-42f7-a897-42c58212d5ef"
+  #       OutputArtifactFormat = "CODE_ZIP"
+  #     }
+  #   }
+  # }
+
   stage {
     name = "Source"
 
@@ -112,17 +134,16 @@ resource "aws_codepipeline" "codepipeline" {
       name             = "Source"
       category         = "Source"
       owner            = "AWS"
-      provider         = "CodeStarSourceConnection"
+      provider         = "CodeCommit"
       version          = "1"
       output_artifacts = ["SourceArtifact"]
       region           = data.aws_region.current.name
       namespace        = "SourceVariables"
       run_order        = 1
       configuration = {
-        FullRepositoryId     = "tycloud97/vietaws-devops-demo"
-        BranchName           = "master"
-        ConnectionArn        = "arn:aws:codestar-connections:ap-southeast-1:827539266883:connection/bb6244c5-3938-42f7-a897-42c58212d5ef"
-        OutputArtifactFormat = "CODE_ZIP"
+        PollForSourceChanges    = false
+        RepositoryName = aws_codecommit_repository.codecommit.repository_name
+        BranchName       = var.code_commit_branch 
       }
     }
   }

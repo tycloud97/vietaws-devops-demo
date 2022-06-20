@@ -28,6 +28,11 @@ module "cicd_front_end" {
   app_name = "front-end"
 }
 
+output "repository_url" {
+  description = "URL of Code Commit Repository for Resource API."
+  value       = module.cicd_front_end.repository_url
+}
+
 
 module "cicd_webhook" {
   source = "./tf_modules/codepipeline-git-webhook"
