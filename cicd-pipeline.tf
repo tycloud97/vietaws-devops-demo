@@ -1,5 +1,5 @@
 resource "aws_codebuild_project" "tf-plan" {
-  name         = "tf-cicd-plan"
+  name         = "${var.environment_name}-tf-cicd-plan"
   description  = "Plan stage for terraform"
   service_role = aws_iam_role.tf-codebuild-role.arn
 
@@ -22,6 +22,26 @@ resource "aws_codebuild_project" "tf-plan" {
       value = "github:token"
       type  = "SECRETS_MANAGER"
     }
+
+    environment_variable {
+      name  = "REGION"
+      value = "ap-southeast-1"
+    }
+
+    environment_variable {
+      name  = "TF_S3_BACKEND_BUCKET"
+      value = "827539266883-terraform-backend-devops-dev"
+    }
+
+    environment_variable {
+      name  = "TF_S3_BACKEND_BUCKET_PATH"
+      value = "shared"
+    }
+
+    environment_variable {
+      name  = "STAGE"
+      value = "shared"
+    }
   }
 
   source {
@@ -31,7 +51,7 @@ resource "aws_codebuild_project" "tf-plan" {
 }
 
 resource "aws_codebuild_project" "tf-apply" {
-  name         = "tf-cicd-apply"
+  name         = "${var.environment_name}-tf-cicd-apply"
   description  = "Apply stage for terraform"
   service_role = aws_iam_role.tf-codebuild-role.arn
 
@@ -54,6 +74,26 @@ resource "aws_codebuild_project" "tf-apply" {
       value = "github:token"
       type  = "SECRETS_MANAGER"
     }
+
+    environment_variable {
+      name  = "REGION"
+      value = "ap-southeast-1"
+    }
+
+    environment_variable {
+      name  = "TF_S3_BACKEND_BUCKET"
+      value = "827539266883-terraform-backend-devops-dev"
+    }
+
+    environment_variable {
+      name  = "TF_S3_BACKEND_BUCKET_PATH"
+      value = "shared"
+    }
+
+    environment_variable {
+      name  = "STAGE"
+      value = "shared"
+    }
   }
   source {
     type      = "CODEPIPELINE"
@@ -64,7 +104,7 @@ resource "aws_codebuild_project" "tf-apply" {
 
 resource "aws_codepipeline" "cicd_pipeline" {
 
-  name     = "tf-cicd"
+  name     = "${var.environment_name}-tf-cicd"
   role_arn = aws_iam_role.tf-codepipeline-role.arn
 
   artifact_store {
@@ -99,8 +139,9 @@ resource "aws_codepipeline" "cicd_pipeline" {
       version         = "1"
       owner           = "AWS"
       input_artifacts = ["tf-code"]
+      output_artifacts = ["tf-plan"]
       configuration = {
-        ProjectName = "tf-cicd-plan"
+        ProjectName = "${aws_codebuild_project.tf-plan.id}"
       }
     }
   }
@@ -113,9 +154,9 @@ resource "aws_codepipeline" "cicd_pipeline" {
       provider        = "CodeBuild"
       version         = "1"
       owner           = "AWS"
-      input_artifacts = ["tf-code"]
+      input_artifacts = ["tf-plan"]
       configuration = {
-        ProjectName = "tf-cicd-apply"
+        ProjectName = "${aws_codebuild_project.tf-apply.id}"
       }
     }
   }

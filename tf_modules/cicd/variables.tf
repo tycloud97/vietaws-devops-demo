@@ -47,11 +47,11 @@ variable "proddeployspec_location" {
 }
 
 variable "launch_template_name" {
-  default = "myproject-launch-template"
+  default     = "myproject-launch-template"
   description = "Name of launch template"
 }
 
 variable "project_name" {
-  default = "myproject"
+  default     = "myproject"
   description = "Project Name"
 }

@@ -106,10 +106,10 @@ resource "aws_codebuild_project" "codebuild" {
     #   value = data.aws_region.current.name
     # }
   }
-source {
-          type = "CODEPIPELINE"
-          buildspec = "buildspec.yml"
-        }
+  source {
+    type      = "CODEPIPELINE"
+    buildspec = "buildspec.yml"
+  }
   source_version = var.code_commit_branch
   tags = {
     Environment = "dev"

@@ -1,5 +1,5 @@
 resource "aws_sns_topic" "code_deploy" {
-  name       = "${var.project_name}-CodeDeploy-SNS"
+  name = "${var.project_name}-CodeDeploy-SNS"
 }
 
 resource "aws_sns_topic_subscription" "code_deploy_subscription" {

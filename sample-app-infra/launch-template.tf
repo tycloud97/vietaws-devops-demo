@@ -1,19 +1,19 @@
 
 
 data "template_file" "userdata" {
-  template = "${file("./install_codedeploy_agent.sh")}"
+  template = file("./install_codedeploy_agent.sh")
 }
 
 resource "aws_launch_template" "launch_template" {
-  
-  name = var.launch_template_name
-  
-  image_id                  = data.aws_ami.ubuntu.id
-  instance_type        = var.instance_type
-  key_name             = aws_key_pair.main.key_name
+
+  name = "${var.environment_name}-lt"
+
+  image_id      = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+  key_name      = aws_key_pair.main.key_name
 
   iam_instance_profile {
-      arn = aws_iam_instance_profile.main.arn
+    arn = aws_iam_instance_profile.main.arn
   }
 
 
@@ -25,9 +25,9 @@ resource "aws_launch_template" "launch_template" {
 
   tag_specifications {
     resource_type = "instance"
-      tags = {
-    Name = "CodeDeployDemo"
-  }
+    tags = {
+      Name = "CodeDeployDemo"
+    }
   }
 
   user_data = base64encode(data.template_file.userdata.rendered)

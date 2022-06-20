@@ -18,3 +18,8 @@ aws --region  ap-southeast-1 deploy create-deployment \
     --deployment-config-name CodeDeployDefault.OneAtATime \
     --deployment-group-name Sample_DepGroup \
     --s3-location bucket=viet-aws-codepipeline-front-end-kweyqpci,bundleType=zip,key=SampleApp.zip
+
+export REGION=ap-southeast-1
+export TF_S3_BACKEND_BUCKET=827539266883-terraform-backend-devops-dev
+export TF_S3_BACKEND_BUCKET_PATH=dev
+export STAGE=dev

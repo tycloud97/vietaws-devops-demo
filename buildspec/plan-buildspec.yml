@@ -2,9 +2,9 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - terraform init
+      - terraform init -backend-config "bucket=${TF_S3_BACKEND_BUCKET}" -backend-config "key=${TF_S3_BACKEND_BUCKET_PATH}/terraform.tfstate" -backend-config "region=${REGION}"
       - terraform validate
   
   build:
     commands:
-      - terraform plan
+      - terraform plan -var-file=${TF_VAR_FILE:-$STAGE.tfvars} -out=${STAGE}.tfplan

@@ -1,25 +1,25 @@
 resource "aws_lb" "lb" {
-  name               = "${var.project_name}-lb"
+  name               = "${var.environment_name}-lb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.allow_80.id, aws_security_group.allow_443.id]
-  subnets            = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
-  idle_timeout = 10
-#   tags = var.required_tags
+  subnets            = module.custom_vpc.public_subnet_ids
+  idle_timeout       = 10
 }
 
 resource "aws_lb_target_group" "tg" {
-  name     = "${var.project_name}-tg"
+  name     = "${var.environment_name}-tg"
   port     = 80
   protocol = "HTTP"
-  vpc_id = aws_default_vpc.default.id
+  vpc_id   = module.custom_vpc.vpc_id
 
 
   health_check {
-    port = 80
+    port                = 80
     healthy_threshold   = 2
     interval            = 5
     unhealthy_threshold = 2
+    timeout             = 2
   }
 
   deregistration_delay = 1

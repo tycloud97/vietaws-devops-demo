@@ -141,9 +141,9 @@ resource "aws_codepipeline" "codepipeline" {
       namespace        = "SourceVariables"
       run_order        = 1
       configuration = {
-        PollForSourceChanges    = false
-        RepositoryName = aws_codecommit_repository.codecommit.repository_name
-        BranchName       = var.code_commit_branch 
+        PollForSourceChanges = false
+        RepositoryName       = aws_codecommit_repository.codecommit.repository_name
+        BranchName           = var.code_commit_branch
       }
     }
   }
@@ -187,18 +187,18 @@ resource "aws_codepipeline" "codepipeline" {
     # }
 
     action {
-      name             = "DeployCodePipeline"
-      category         = "Deploy"
-      owner            = "AWS"
-      provider         = "CodeDeploy"
-      input_artifacts  = ["BuildArtifact"]
-      version          = "1"
-      run_order        = 1
+      name            = "DeployCodePipeline"
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "CodeDeploy"
+      input_artifacts = ["BuildArtifact"]
+      version         = "1"
+      run_order       = 1
       configuration = {
-        ApplicationName = "myproject-App"
+        ApplicationName     = "myproject-App"
         DeploymentGroupName = "myproject-DG"
       }
-      region    = data.aws_region.current.name
+      region = data.aws_region.current.name
     }
   }
 
@@ -226,7 +226,7 @@ resource "aws_codepipeline" "codepipeline" {
         ProjectName = aws_codebuild_project.codebuildproddeployment.name
       }
 
-   
+
       region    = data.aws_region.current.name
       namespace = "DeployProductionVariables"
     }

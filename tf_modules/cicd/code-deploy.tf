@@ -7,7 +7,7 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group" {
   app_name               = aws_codedeploy_app.app.name
   deployment_config_name = "CodeDeployDefault.OneAtATime"
   deployment_group_name  = "${var.project_name}-DG"
-  service_role_arn      = aws_iam_role.codedeploy_service.arn
+  service_role_arn       = aws_iam_role.codedeploy_service.arn
   autoscaling_groups     = [aws_autoscaling_group.asg.name]
 
   deployment_style {
@@ -28,14 +28,14 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group" {
 
   trigger_configuration {
     trigger_events = ["DeploymentStart",
-        "DeploymentSuccess",
-        "DeploymentFailure",
-        "DeploymentStop", 
-        "DeploymentRollback",
-        "InstanceStart",
-        "InstanceSuccess",
-        "InstanceFailure"]
-    trigger_name = "${var.project_name}-CodeDeploy-TriggerEvents"
+      "DeploymentSuccess",
+      "DeploymentFailure",
+      "DeploymentStop",
+      "DeploymentRollback",
+      "InstanceStart",
+      "InstanceSuccess",
+    "InstanceFailure"]
+    trigger_name       = "${var.project_name}-CodeDeploy-TriggerEvents"
     trigger_target_arn = aws_sns_topic.code_deploy.arn
   }
 }
