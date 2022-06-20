@@ -4,7 +4,7 @@ resource "aws_lb" "lb" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.allow_80.id, aws_security_group.allow_443.id]
   subnets            = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
-
+  idle_timeout = 10
 #   tags = var.required_tags
 }
 
@@ -17,9 +17,12 @@ resource "aws_lb_target_group" "tg" {
 
   health_check {
     port = 80
+    healthy_threshold   = 2
+    interval            = 5
+    unhealthy_threshold = 2
   }
 
-  deregistration_delay = 0
+  deregistration_delay = 1
 }
 
 resource "aws_lb_listener" "alb_listener" {
