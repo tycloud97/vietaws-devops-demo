@@ -4,6 +4,7 @@ resource "aws_codecommit_repository" "codecommit" {
 }
 
 resource "aws_cloudwatch_event_rule" "codecommit_rule" {
+
   name        = "bookstore-codecommit-${var.app_name}"
   description = "Event Rule for any commit to codecommit of Bookstore App - ${var.app_name}"
 
@@ -22,9 +23,11 @@ EOF
 }
 
 resource "aws_cloudwatch_event_target" "codecommit_rule_target" {
+      count = var.enabled ? 1 : 0
+
   rule      = aws_cloudwatch_event_rule.codecommit_rule.name
   target_id = "TriggerCodePipeline"
-  arn       = aws_codepipeline.codepipeline.arn
+  arn       = aws_codepipeline.codepipeline[0].arn
   role_arn  = aws_iam_role.cloudwatch_target_role.arn
 }
 

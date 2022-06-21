@@ -133,13 +133,42 @@ resource "aws_codepipeline" "cicd_pipeline" {
   stage {
     name = "Plan"
     action {
-      name            = "Build"
-      category        = "Build"
-      provider        = "CodeBuild"
-      version         = "1"
-      owner           = "AWS"
-      input_artifacts = ["tf-code"]
+      name             = "PlanDev"
+      category         = "Build"
+      provider         = "CodeBuild"
+      version          = "1"
+      owner            = "AWS"
+      input_artifacts  = ["tf-code"]
       output_artifacts = ["tf-plan"]
+      run_order        = 1
+      configuration = {
+        ProjectName = "${aws_codebuild_project.tf-plan.id}"
+      }
+    }
+
+    action {
+      name             = "PlanStaging"
+      category         = "Build"
+      provider         = "CodeBuild"
+      version          = "1"
+      owner            = "AWS"
+      input_artifacts  = ["tf-code"]
+      output_artifacts = ["tf-plan-staging"]
+      run_order        = 1
+      configuration = {
+        ProjectName = "${aws_codebuild_project.tf-plan.id}"
+      }
+    }
+
+    action {
+      name             = "PlanProd"
+      category         = "Build"
+      provider         = "CodeBuild"
+      version          = "1"
+      owner            = "AWS"
+      run_order        = 1
+      input_artifacts  = ["tf-code"]
+      output_artifacts = ["tf-plan-prod"]
       configuration = {
         ProjectName = "${aws_codebuild_project.tf-plan.id}"
       }
@@ -148,11 +177,38 @@ resource "aws_codepipeline" "cicd_pipeline" {
 
   stage {
     name = "Deploy"
+
     action {
-      name            = "Deploy"
+      name      = "ManualApproval"
+      run_order = 1
+      category  = "Approval"
+      owner     = "AWS"
+      version   = "1"
+      provider  = "Manual"
+      configuration = {
+        "CustomData" = "Approve this AMI to be stored in the SSM Parameter For new EC2s"
+      }
+    }
+
+    action {
+      name            = "DeployDev"
       category        = "Build"
       provider        = "CodeBuild"
       version         = "1"
+      run_order       = 2
+      owner           = "AWS"
+      input_artifacts = ["tf-plan"]
+      configuration = {
+        ProjectName = "${aws_codebuild_project.tf-apply.id}"
+      }
+    }
+
+    action {
+      name            = "DeployStaging"
+      category        = "Build"
+      provider        = "CodeBuild"
+      version         = "1"
+      run_order       = 2
       owner           = "AWS"
       input_artifacts = ["tf-plan"]
       configuration = {
@@ -160,5 +216,32 @@ resource "aws_codepipeline" "cicd_pipeline" {
       }
     }
   }
+    stage {
+      name = "DeployProd"
 
-}
+      action {
+        name      = "ManualApproval"
+        run_order = 1
+        category  = "Approval"
+        owner     = "AWS"
+        version   = "1"
+        provider  = "Manual"
+        configuration = {
+          "CustomData" = "Approve this AMI to be stored in the SSM Parameter For new EC2s"
+        }
+      }
+
+      action {
+        name            = "DeployProd"
+        category        = "Build"
+        provider        = "CodeBuild"
+        version         = "1"
+        run_order       = 2
+        owner           = "AWS"
+        input_artifacts = ["tf-plan"]
+        configuration = {
+          ProjectName = "${aws_codebuild_project.tf-apply.id}"
+        }
+      }
+    }
+  }

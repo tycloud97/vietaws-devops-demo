@@ -18,6 +18,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "codepipeline_policy" {
+
   name   = "codepipeline-${var.app_name}"
   role   = aws_iam_role.codepipeline_role.id
   policy = <<EOF
@@ -63,6 +64,7 @@ EOF
 # }
 
 resource "aws_iam_role" "cloudwatch_target_role" {
+
   name = "cloudwatchtarget-${var.app_name}"
 
   assume_role_policy = <<EOF
@@ -82,6 +84,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "cloudwatch_target_role_policy" {
+    count = var.enabled ? 1 : 0
+
   name   = "cloudwatchtarget-${var.app_name}"
   role   = aws_iam_role.cloudwatch_target_role.id
   policy = <<EOF
@@ -91,7 +95,7 @@ resource "aws_iam_role_policy" "cloudwatch_target_role_policy" {
     {
       "Effect": "Allow",
       "Action": "codepipeline:StartPipelineExecution",
-      "Resource": "${aws_codepipeline.codepipeline.arn}"
+      "Resource": "${aws_codepipeline.codepipeline[0].arn}"
     }
   ]
 }
@@ -99,6 +103,8 @@ EOF
 }
 
 resource "aws_codepipeline" "codepipeline" {
+    count = var.enabled ? 1 : 0
+
   name     = "viet-aws-codepipeline-${var.app_name}"
   role_arn = aws_iam_role.codepipeline_role.arn
   artifact_store {
@@ -161,11 +167,13 @@ resource "aws_codepipeline" "codepipeline" {
       version          = "1"
       run_order        = 1
       configuration = {
-        ProjectName = aws_codebuild_project.codebuild.name
+        ProjectName = aws_codebuild_project.codebuild[0].name
       }
       region    = data.aws_region.current.name
       namespace = "BuildVariables"
     }
+
+    
   }
   stage {
     name = "DeployDevelopment"
@@ -195,8 +203,23 @@ resource "aws_codepipeline" "codepipeline" {
       version         = "1"
       run_order       = 1
       configuration = {
-        ApplicationName     = "myproject-App"
-        DeploymentGroupName = "myproject-DG"
+        ApplicationName     = "${var.app_name}-App"
+        DeploymentGroupName = "${var.app_name}-DG"
+      }
+      region = data.aws_region.current.name
+    }
+
+     action {
+      name            = "DeployCodePipelineStaging"
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "CodeDeploy"
+      input_artifacts = ["BuildArtifact"]
+      version         = "1"
+      run_order       = 2
+      configuration = {
+        ApplicationName     = "${var.app_name}-App-staging"
+        DeploymentGroupName = "${var.app_name}-DG-staging"
       }
       region = data.aws_region.current.name
     }
@@ -213,22 +236,21 @@ resource "aws_codepipeline" "codepipeline" {
       version   = "1"
       run_order = 1
     }
+
     action {
-      name             = "DeployDevelopment"
-      category         = "Build"
-      owner            = "AWS"
-      provider         = "CodeBuild"
-      input_artifacts  = ["SourceArtifact"]
-      output_artifacts = ["DeployProductionArtifact"]
-      version          = "1"
-      run_order        = 2
+      name            = "DeployCodePipelineProd"
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "CodeDeploy"
+      input_artifacts = ["BuildArtifact"]
+      version         = "1"
+      run_order       = 2
       configuration = {
-        ProjectName = aws_codebuild_project.codebuildproddeployment.name
+        ApplicationName     = "${var.app_name}-App-prod"
+        DeploymentGroupName = "${var.app_name}-DG-prod"
       }
-
-
-      region    = data.aws_region.current.name
-      namespace = "DeployProductionVariables"
+      region = data.aws_region.current.name
     }
+   
   }
 }

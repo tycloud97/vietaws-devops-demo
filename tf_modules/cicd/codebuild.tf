@@ -1,4 +1,5 @@
 resource "aws_iam_role" "codebuild_iam" {
+
   name = "codebuild-${var.app_name}"
 
   assume_role_policy = <<EOF
@@ -82,7 +83,81 @@ POLICY
 
 
 resource "aws_codebuild_project" "codebuild" {
+  count = var.enabled ? 1 : 0
+
   name           = "viet-aws-${var.app_name}"
+  description    = "CodeBuild project for the App- ${var.app_name}"
+  build_timeout  = "60"
+  queued_timeout = "480"
+  service_role   = aws_iam_role.codebuild_iam.arn
+  artifacts {
+    type = "CODEPIPELINE"
+  }
+  badge_enabled = false
+  environment {
+    compute_type                = "BUILD_GENERAL1_SMALL"
+    image                       = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+    type                        = "LINUX_CONTAINER"
+    image_pull_credentials_type = "CODEBUILD"
+    privileged_mode             = true
+    # environment_variable {
+    #   name  = "ECR_URL"
+    #   value = aws_ecr_repository.ecr.repository_url
+    # }
+    # environment_variable {
+    #   name  = "AWS_DEFAULT_REGION"
+    #   value = data.aws_region.current.name
+    # }
+  }
+  source {
+    type      = "CODEPIPELINE"
+    buildspec = "buildspec.yml"
+  }
+  source_version = var.code_commit_branch
+  tags = {
+    Environment = "dev"
+  }
+}
+resource "aws_codebuild_project" "codebuild-staging" {
+  count = var.enabled ? 1 : 0
+
+  name           = "viet-aws-${var.app_name}-staging"
+  description    = "CodeBuild project for the App- ${var.app_name}"
+  build_timeout  = "60"
+  queued_timeout = "480"
+  service_role   = aws_iam_role.codebuild_iam.arn
+  artifacts {
+    type = "CODEPIPELINE"
+  }
+  badge_enabled = false
+  environment {
+    compute_type                = "BUILD_GENERAL1_SMALL"
+    image                       = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+    type                        = "LINUX_CONTAINER"
+    image_pull_credentials_type = "CODEBUILD"
+    privileged_mode             = true
+    # environment_variable {
+    #   name  = "ECR_URL"
+    #   value = aws_ecr_repository.ecr.repository_url
+    # }
+    # environment_variable {
+    #   name  = "AWS_DEFAULT_REGION"
+    #   value = data.aws_region.current.name
+    # }
+  }
+  source {
+    type      = "CODEPIPELINE"
+    buildspec = "buildspec.yml"
+  }
+  source_version = var.code_commit_branch
+  tags = {
+    Environment = "dev"
+  }
+}
+resource "aws_codebuild_project" "codebuild-prod" {
+  count = var.enabled ? 1 : 0
+
+  name           = "viet-aws-${var.app_name}-prod"
   description    = "CodeBuild project for the App- ${var.app_name}"
   build_timeout  = "60"
   queued_timeout = "480"
@@ -118,6 +193,8 @@ resource "aws_codebuild_project" "codebuild" {
 
 
 resource "aws_codebuild_project" "codebuilddevdeployment" {
+  count = var.enabled ? 1 : 0
+
   name           = "viet-aws-development-deploy-${var.app_name}"
   description    = "CodeBuild project for Deployment the App- ${var.app_name} in Development Namespace."
   build_timeout  = "60"
@@ -164,6 +241,8 @@ resource "aws_codebuild_project" "codebuilddevdeployment" {
 
 
 resource "aws_codebuild_project" "codebuildproddeployment" {
+    count = var.enabled ? 1 : 0
+
   name           = "viet-aws-prod-deploy-${var.app_name}"
   description    = "CodeBuild project for Deployment the App- ${var.app_name} in Prodcution Namespace."
   build_timeout  = "60"

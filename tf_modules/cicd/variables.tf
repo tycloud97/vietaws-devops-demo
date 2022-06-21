@@ -1,6 +1,6 @@
 variable "app_name" {
   description = "App Name  of the Pipeline"
-  //default = "resource-api"
+  default = "resource-api"
   type = string
 }
 
@@ -54,4 +54,28 @@ variable "launch_template_name" {
 variable "project_name" {
   default     = "myproject"
   description = "Project Name"
+}
+variable "environment_name" {
+  type    = string
+  default = "shared"
+}
+
+
+variable "enabled" {
+  default = false
+}
+
+variable "instance_type" {
+  description = "EC2 instance type that will be launched"
+  default     = "t2.micro"
+}
+
+variable "public_key_path" {
+  description = "Path to a public ssh key"
+  default     = "~/.ssh/code-deploy-demo.pub"
+}
+
+variable "private_key_path" {
+  description = "Path to a private ssh key"
+  default     = "~/.ssh/code-deploy-demo"
 }

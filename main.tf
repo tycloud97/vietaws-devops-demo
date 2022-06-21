@@ -22,15 +22,16 @@ terraform {
 
 data "aws_caller_identity" "current" {}
 
-# module "cicd_sample_app" {
-#   source   = "./tf_modules/cicd"
-#   app_name = "sample-app"
-# }
+module "cicd_sample_app" {
+  enabled = false
+  source   = "./tf_modules/cicd"
+  app_name = "sample-app"
+}
 
-# output "repository_url" {
-#   description = "URL of Code Commit Repository for Resource API."
-#   value       = module.cicd_front_end.repository_url
-# }
+output "repository_url" {
+  description = "URL of Code Commit Repository for Resource API."
+  value       = module.cicd_sample_app.repository_url
+}
 
 
 module "cicd_webhook" {

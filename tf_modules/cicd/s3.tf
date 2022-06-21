@@ -5,7 +5,6 @@ resource "random_string" "bucket_suffix" {
 
 resource "aws_s3_bucket" "codepipeline_bucket" {
   bucket = "viet-aws-codepipeline-${var.app_name}-${lower(random_string.bucket_suffix.result)}"
-  acl    = "private"
 }
 
 # resource "aws_s3_bucket_policy" "codepipeline_bucket_policy" {
