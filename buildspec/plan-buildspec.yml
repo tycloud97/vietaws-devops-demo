@@ -2,6 +2,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - cd sample-app-infra
       - terraform init -backend-config "bucket=${TF_S3_BACKEND_BUCKET}" -backend-config "key=${TF_S3_BACKEND_BUCKET_PATH}/terraform.tfstate" -backend-config "region=${REGION}"
       - terraform validate
   
