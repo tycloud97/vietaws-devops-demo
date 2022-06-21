@@ -35,12 +35,12 @@ resource "aws_codebuild_project" "tf-plan" {
 
     environment_variable {
       name  = "TF_S3_BACKEND_BUCKET_PATH"
-      value = "shared"
+      value = "dev"
     }
 
     environment_variable {
       name  = "STAGE"
-      value = "shared"
+      value = "dev"
     }
   }
 
