@@ -9,7 +9,7 @@ resource "aws_codebuild_project" "tf-plan" {
 
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "hashicorp/terraform:latest"
+    image                       = "hashicorp/terraform:1.2.3"
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "SERVICE_ROLE"
     registry_credential {
@@ -61,7 +61,7 @@ resource "aws_codebuild_project" "tf-apply" {
 
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "hashicorp/terraform:latest"
+    image                       = "hashicorp/terraform:1.2.3"
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "SERVICE_ROLE"
     registry_credential {
@@ -146,33 +146,33 @@ resource "aws_codepipeline" "cicd_pipeline" {
       }
     }
 
-    action {
-      name             = "PlanStaging"
-      category         = "Build"
-      provider         = "CodeBuild"
-      version          = "1"
-      owner            = "AWS"
-      input_artifacts  = ["tf-code"]
-      output_artifacts = ["tf-plan-staging"]
-      run_order        = 1
-      configuration = {
-        ProjectName = "${aws_codebuild_project.tf-plan.id}"
-      }
-    }
+    # action {
+    #   name             = "PlanStaging"
+    #   category         = "Build"
+    #   provider         = "CodeBuild"
+    #   version          = "1"
+    #   owner            = "AWS"
+    #   input_artifacts  = ["tf-code"]
+    #   output_artifacts = ["tf-plan-staging"]
+    #   run_order        = 1
+    #   configuration = {
+    #     ProjectName = "${aws_codebuild_project.tf-plan.id}"
+    #   }
+    # }
 
-    action {
-      name             = "PlanProd"
-      category         = "Build"
-      provider         = "CodeBuild"
-      version          = "1"
-      owner            = "AWS"
-      run_order        = 1
-      input_artifacts  = ["tf-code"]
-      output_artifacts = ["tf-plan-prod"]
-      configuration = {
-        ProjectName = "${aws_codebuild_project.tf-plan.id}"
-      }
-    }
+    # action {
+    #   name             = "PlanProd"
+    #   category         = "Build"
+    #   provider         = "CodeBuild"
+    #   version          = "1"
+    #   owner            = "AWS"
+    #   run_order        = 1
+    #   input_artifacts  = ["tf-code"]
+    #   output_artifacts = ["tf-plan-prod"]
+    #   configuration = {
+    #     ProjectName = "${aws_codebuild_project.tf-plan.id}"
+    #   }
+    # }
   }
 
   stage {
@@ -203,18 +203,18 @@ resource "aws_codepipeline" "cicd_pipeline" {
       }
     }
 
-    action {
-      name            = "DeployStaging"
-      category        = "Build"
-      provider        = "CodeBuild"
-      version         = "1"
-      run_order       = 2
-      owner           = "AWS"
-      input_artifacts = ["tf-plan"]
-      configuration = {
-        ProjectName = "${aws_codebuild_project.tf-apply.id}"
-      }
-    }
+    # action {
+    #   name            = "DeployStaging"
+    #   category        = "Build"
+    #   provider        = "CodeBuild"
+    #   version         = "1"
+    #   run_order       = 2
+    #   owner           = "AWS"
+    #   input_artifacts = ["tf-plan"]
+    #   configuration = {
+    #     ProjectName = "${aws_codebuild_project.tf-apply.id}"
+    #   }
+    # }
   }
   stage {
     name = "DeployProd"

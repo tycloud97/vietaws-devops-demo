@@ -9,3 +9,6 @@ phases:
   build:
     commands:
       - terraform plan -var-file=${TF_VAR_FILE:-$STAGE.tfvars} -out=${STAGE}.tfplan
+artifacts:
+  files:
+    - ${STAGE}.tfplan

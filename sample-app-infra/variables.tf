@@ -34,12 +34,12 @@ variable "instance_type" {
   default     = "t2.micro"
 }
 
-variable "public_key_path" {
-  description = "Path to a public ssh key"
-  default     = "~/.ssh/code-deploy-demo.pub"
-}
+# variable "public_key_path" {
+#   description = "Path to a public ssh key"
+#   default     = "~/.ssh/code-deploy-demo.pub"
+# }
 
-variable "private_key_path" {
-  description = "Path to a private ssh key"
-  default     = "~/.ssh/code-deploy-demo"
-}
+# variable "private_key_path" {
+#   description = "Path to a private ssh key"
+#   default     = "~/.ssh/code-deploy-demo"
+# }

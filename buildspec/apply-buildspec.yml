@@ -2,7 +2,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - cd sample-app-infra
+      # - cd sample-app-infra
       # - terraform init
       # - terraform validate
   

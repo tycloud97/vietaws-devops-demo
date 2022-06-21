@@ -17,7 +17,7 @@ terraform {
     key     = "terraform12233.tfstate"
     region  = "ap-southeast-1"
   }
-  required_version = ">= 0.14.9"
+  required_version = ">= 1.2.3"
 }
 
 data "aws_caller_identity" "current" {}
