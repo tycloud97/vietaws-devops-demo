@@ -14,7 +14,7 @@ terraform {
   backend "s3" {
     bucket  = "827539266883-terraform-state"
     encrypt = true
-    key     = "terraform122.tfstate"
+    key     = "terraform12233.tfstate"
     region  = "ap-southeast-1"
   }
   required_version = ">= 0.14.9"
@@ -23,7 +23,7 @@ terraform {
 data "aws_caller_identity" "current" {}
 
 module "cicd_sample_app" {
-  enabled = false
+  enabled  = false
   source   = "./tf_modules/cicd"
   app_name = "sample-app"
 }

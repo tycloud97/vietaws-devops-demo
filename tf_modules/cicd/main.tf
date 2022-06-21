@@ -1,7 +1,5 @@
 # create a service role for codedeploy
 resource "aws_iam_role" "codedeploy_service" {
-    count = var.enabled ? 1 : 0
-
   name = "${var.environment_name}-codedeploy-service-role"
 
   assume_role_policy = <<EOF

@@ -1,11 +1,11 @@
 resource "aws_codedeploy_app" "app" {
-  count = var.enabled ? 1 : 0
+  count            = var.enabled ? 1 : 0
   compute_platform = "Server"
   name             = "${var.project_name}-App"
 }
 
 resource "aws_codedeploy_deployment_group" "app_deployment_group" {
-  count = var.enabled ? 1 : 0
+  count                  = var.enabled ? 1 : 0
   app_name               = aws_codedeploy_app.app[0].name
   deployment_config_name = "CodeDeployDefault.OneAtATime"
   deployment_group_name  = "${var.project_name}-DG"
@@ -43,7 +43,7 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group" {
 }
 
 resource "aws_codedeploy_deployment_group" "app_deployment_group_staging" {
-  count = var.enabled ? 1 : 0
+  count                  = var.enabled ? 1 : 0
   app_name               = aws_codedeploy_app.app[0].name
   deployment_config_name = "CodeDeployDefault.OneAtATime"
   deployment_group_name  = "${var.project_name}-DG-staging"
@@ -81,7 +81,7 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group_staging" {
 }
 
 resource "aws_codedeploy_deployment_group" "app_deployment_group_prod" {
-  count = var.enabled ? 1 : 0
+  count                  = var.enabled ? 1 : 0
   app_name               = aws_codedeploy_app.app[0].name
   deployment_config_name = "CodeDeployDefault.OneAtATime"
   deployment_group_name  = "${var.project_name}-DG-prod"

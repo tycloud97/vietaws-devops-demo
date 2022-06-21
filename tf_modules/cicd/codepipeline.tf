@@ -84,7 +84,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "cloudwatch_target_role_policy" {
-    count = var.enabled ? 1 : 0
+  count = var.enabled ? 1 : 0
 
   name   = "cloudwatchtarget-${var.app_name}"
   role   = aws_iam_role.cloudwatch_target_role.id
@@ -103,7 +103,7 @@ EOF
 }
 
 resource "aws_codepipeline" "codepipeline" {
-    count = var.enabled ? 1 : 0
+  count = var.enabled ? 1 : 0
 
   name     = "viet-aws-codepipeline-${var.app_name}"
   role_arn = aws_iam_role.codepipeline_role.arn
@@ -173,7 +173,7 @@ resource "aws_codepipeline" "codepipeline" {
       namespace = "BuildVariables"
     }
 
-    
+
   }
   stage {
     name = "DeployDevelopment"
@@ -209,7 +209,7 @@ resource "aws_codepipeline" "codepipeline" {
       region = data.aws_region.current.name
     }
 
-     action {
+    action {
       name            = "DeployCodePipelineStaging"
       category        = "Deploy"
       owner           = "AWS"
@@ -251,6 +251,6 @@ resource "aws_codepipeline" "codepipeline" {
       }
       region = data.aws_region.current.name
     }
-   
+
   }
 }

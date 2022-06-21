@@ -23,7 +23,7 @@ EOF
 }
 
 resource "aws_cloudwatch_event_target" "codecommit_rule_target" {
-      count = var.enabled ? 1 : 0
+  count = var.enabled ? 1 : 0
 
   rule      = aws_cloudwatch_event_rule.codecommit_rule.name
   target_id = "TriggerCodePipeline"

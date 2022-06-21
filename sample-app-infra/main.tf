@@ -9,14 +9,14 @@ terraform {
       source  = "hashicorp/aws"
     }
   }
-  backend "s3" {}
+  # backend "s3" {}
 
-  # backend "s3" {
-  #   bucket  = "827539266883-terraform-state"
-  #   encrypt = true
-  #   key     = "terraform22.tfstate"
-  #   region  = "ap-southeast-1"
-  # }
+  backend "s3" {
+    bucket  = "827539266883-terraform-state"
+    encrypt = true
+    key     = "terraform22.tfstate"
+    region  = "ap-southeast-1"
+  }
 }
 
 module "custom_vpc" {

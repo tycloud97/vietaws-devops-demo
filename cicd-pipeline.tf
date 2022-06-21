@@ -87,12 +87,12 @@ resource "aws_codebuild_project" "tf-apply" {
 
     environment_variable {
       name  = "TF_S3_BACKEND_BUCKET_PATH"
-      value = "shared"
+      value = "dev"
     }
 
     environment_variable {
       name  = "STAGE"
-      value = "shared"
+      value = "dev"
     }
   }
   source {
@@ -216,32 +216,32 @@ resource "aws_codepipeline" "cicd_pipeline" {
       }
     }
   }
-    stage {
-      name = "DeployProd"
+  stage {
+    name = "DeployProd"
 
-      action {
-        name      = "ManualApproval"
-        run_order = 1
-        category  = "Approval"
-        owner     = "AWS"
-        version   = "1"
-        provider  = "Manual"
-        configuration = {
-          "CustomData" = "Approve this AMI to be stored in the SSM Parameter For new EC2s"
-        }
+    action {
+      name      = "ManualApproval"
+      run_order = 1
+      category  = "Approval"
+      owner     = "AWS"
+      version   = "1"
+      provider  = "Manual"
+      configuration = {
+        "CustomData" = "Approve this AMI to be stored in the SSM Parameter For new EC2s"
       }
+    }
 
-      action {
-        name            = "DeployProd"
-        category        = "Build"
-        provider        = "CodeBuild"
-        version         = "1"
-        run_order       = 2
-        owner           = "AWS"
-        input_artifacts = ["tf-plan"]
-        configuration = {
-          ProjectName = "${aws_codebuild_project.tf-apply.id}"
-        }
+    action {
+      name            = "DeployProd"
+      category        = "Build"
+      provider        = "CodeBuild"
+      version         = "1"
+      run_order       = 2
+      owner           = "AWS"
+      input_artifacts = ["tf-plan"]
+      configuration = {
+        ProjectName = "${aws_codebuild_project.tf-apply.id}"
       }
     }
   }
+}

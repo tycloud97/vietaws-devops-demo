@@ -241,7 +241,7 @@ resource "aws_codebuild_project" "codebuilddevdeployment" {
 
 
 resource "aws_codebuild_project" "codebuildproddeployment" {
-    count = var.enabled ? 1 : 0
+  count = var.enabled ? 1 : 0
 
   name           = "viet-aws-prod-deploy-${var.app_name}"
   description    = "CodeBuild project for Deployment the App- ${var.app_name} in Prodcution Namespace."

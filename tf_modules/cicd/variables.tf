@@ -1,7 +1,7 @@
 variable "app_name" {
   description = "App Name  of the Pipeline"
-  default = "resource-api"
-  type = string
+  default     = "resource-api"
+  type        = string
 }
 
 # variable "cluster_name" {
