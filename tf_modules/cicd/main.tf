@@ -78,7 +78,7 @@ resource "aws_codedeploy_deployment_group" "main" {
   deployment_group_name = "${var.environment_name}-dg"
   service_role_arn      = aws_iam_role.codedeploy_service.arn
 
-  deployment_config_name = "CodeDeployDefault.OneAtATime" # AWS defined deployment config
+  deployment_config_name = "CodeDeployDefault.AllAtOnce" # AWS defined deployment config
 
   ec2_tag_set {
     ec2_tag_filter {
