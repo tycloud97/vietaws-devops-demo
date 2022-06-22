@@ -51,10 +51,7 @@ variable "launch_template_name" {
   description = "Name of launch template"
 }
 
-variable "project_name" {
-  default     = "myproject"
-  description = "Project Name"
-}
+
 variable "environment_name" {
   type    = string
   default = "shared"

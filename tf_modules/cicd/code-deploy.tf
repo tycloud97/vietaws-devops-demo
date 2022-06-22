@@ -1,14 +1,14 @@
 resource "aws_codedeploy_app" "app" {
   count            = var.enabled ? 1 : 0
   compute_platform = "Server"
-  name             = "${var.project_name}-App"
+  name             = "${var.app_name}-App"
 }
 
 resource "aws_codedeploy_deployment_group" "app_deployment_group" {
   count                  = var.enabled ? 1 : 0
   app_name               = aws_codedeploy_app.app[0].name
   deployment_config_name = "CodeDeployDefault.OneAtATime"
-  deployment_group_name  = "${var.project_name}-DG"
+  deployment_group_name  = "${var.app_name}-DG"
   service_role_arn       = aws_iam_role.codedeploy_service.arn
   autoscaling_groups     = ["dev-asg"]
 
@@ -37,7 +37,7 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group" {
       "InstanceStart",
       "InstanceSuccess",
     "InstanceFailure"]
-    trigger_name       = "${var.project_name}-CodeDeploy-TriggerEvents"
+    trigger_name       = "${var.app_name}-CodeDeploy-TriggerEvents"
     trigger_target_arn = aws_sns_topic.code_deploy.arn
   }
 }
@@ -46,7 +46,7 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group_staging" {
   count                  = var.enabled ? 1 : 0
   app_name               = aws_codedeploy_app.app[0].name
   deployment_config_name = "CodeDeployDefault.OneAtATime"
-  deployment_group_name  = "${var.project_name}-DG-staging"
+  deployment_group_name  = "${var.app_name}-DG-staging"
   service_role_arn       = aws_iam_role.codedeploy_service.arn
   autoscaling_groups     = ["dev-asg"]
 
@@ -75,7 +75,7 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group_staging" {
       "InstanceStart",
       "InstanceSuccess",
     "InstanceFailure"]
-    trigger_name       = "${var.project_name}-CodeDeploy-TriggerEvents"
+    trigger_name       = "${var.app_name}-CodeDeploy-TriggerEvents"
     trigger_target_arn = aws_sns_topic.code_deploy.arn
   }
 }
@@ -84,7 +84,7 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group_prod" {
   count                  = var.enabled ? 1 : 0
   app_name               = aws_codedeploy_app.app[0].name
   deployment_config_name = "CodeDeployDefault.OneAtATime"
-  deployment_group_name  = "${var.project_name}-DG-prod"
+  deployment_group_name  = "${var.app_name}-DG-prod"
   service_role_arn       = aws_iam_role.codedeploy_service.arn
   autoscaling_groups     = ["dev-asg"]
 
@@ -113,7 +113,7 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group_prod" {
       "InstanceStart",
       "InstanceSuccess",
     "InstanceFailure"]
-    trigger_name       = "${var.project_name}-CodeDeploy-TriggerEvents"
+    trigger_name       = "${var.app_name}-CodeDeploy-TriggerEvents"
     trigger_target_arn = aws_sns_topic.code_deploy.arn
   }
 }
