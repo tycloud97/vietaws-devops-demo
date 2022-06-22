@@ -9,6 +9,11 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 3.27"
     }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "3.3.1"
+    }
   }
   # backend "s3" {}
   backend "s3" {
@@ -20,19 +25,12 @@ terraform {
   required_version = ">= 1.2.3"
 }
 
-data "aws_caller_identity" "current" {}
 
 module "cicd_sample_app" {
   enabled  = true
   source   = "./tf_modules/cicd"
   app_name = "sample-app"
 }
-
-output "repository_url" {
-  description = "URL of Code Commit Repository for Resource API."
-  value       = module.cicd_sample_app.repository_url
-}
-
 
 module "cicd_webhook" {
   source = "./tf_modules/codepipeline-git-webhook"

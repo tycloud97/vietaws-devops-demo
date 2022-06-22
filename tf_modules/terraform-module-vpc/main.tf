@@ -36,9 +36,9 @@ data "aws_availability_zones" "available" {}
 
 ## Create Public Subnets ##
 resource "aws_subnet" "first_public_az" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.first_public_subnet_cidr
-  availability_zone = data.aws_availability_zones.available.names[0]
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.first_public_subnet_cidr
+  availability_zone       = data.aws_availability_zones.available.names[0]
   map_public_ip_on_launch = true
   tags = { Name = "${local.base_name} Public Network First AZ"
 
@@ -47,9 +47,9 @@ resource "aws_subnet" "first_public_az" {
 }
 
 resource "aws_subnet" "second_public_az" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.second_public_subnet_cidr
-  availability_zone = data.aws_availability_zones.available.names[1]
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.second_public_subnet_cidr
+  availability_zone       = data.aws_availability_zones.available.names[1]
   map_public_ip_on_launch = true
 
   tags = { Name = "${local.base_name} Public Network Second AZ"
