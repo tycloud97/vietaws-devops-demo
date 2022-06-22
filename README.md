@@ -15,7 +15,7 @@ aws --region ap-southeast-1 deploy push \
 
 aws --region  ap-southeast-1 deploy create-deployment \
     --application-name Sample_App \
-    --deployment-config-name CodeDeployDefault.OneAtATime \
+    --deployment-config-name CodeDeployDefault.AllAtOnce \
     --deployment-group-name Sample_DepGroup \
     --s3-location bucket=viet-aws-codepipeline-front-end-kweyqpci,bundleType=zip,key=SampleApp.zip
 

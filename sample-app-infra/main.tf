@@ -43,12 +43,16 @@ module "custom_vpc" {
 }
 
 data "aws_ami" "ubuntu" {
-
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-arm64-server-*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["arm64"]
   }
 
   filter {
@@ -56,7 +60,7 @@ data "aws_ami" "ubuntu" {
     values = ["hvm"]
   }
 
-  owners = ["099720109477"]
+  owners = ["099720109477"] # Canonical
 }
 
 
@@ -141,7 +145,7 @@ resource "aws_codedeploy_deployment_group" "main" {
   deployment_group_name = "${var.environment_name}-dg"
   service_role_arn      = aws_iam_role.codedeploy_service.arn
 
-  deployment_config_name = "CodeDeployDefault.OneAtATime" # AWS defined deployment config
+  deployment_config_name = "CodeDeployDefault.AllAtOnce" # AWS defined deployment config
 
   ec2_tag_set {
     ec2_tag_filter {
