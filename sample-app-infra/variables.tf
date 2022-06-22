@@ -31,7 +31,7 @@ variable "region" {
 
 variable "instance_type" {
   description = "EC2 instance type that will be launched"
-  default     = "t2.micro"
+  default     = "t4g.small"
 }
 
 # variable "public_key_path" {

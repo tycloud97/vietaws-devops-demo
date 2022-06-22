@@ -4,7 +4,7 @@ resource "aws_lb" "lb" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.allow_80.id, aws_security_group.allow_443.id]
   subnets            = module.custom_vpc.public_subnet_ids
-  idle_timeout       = 10
+  idle_timeout       = 1
 }
 
 resource "aws_lb_target_group" "tg" {
@@ -22,7 +22,7 @@ resource "aws_lb_target_group" "tg" {
     timeout             = 2
   }
 
-  deregistration_delay = 1
+  deregistration_delay = 0
 }
 
 resource "aws_lb_listener" "alb_listener" {
