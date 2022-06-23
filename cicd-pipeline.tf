@@ -436,14 +436,14 @@ resource "aws_codepipeline" "cicd_pipeline" {
         ProjectName = "${aws_codebuild_project.tf-plan-prod.id}"
       }
     }
-    action {
-      name      = "ManualApproval"
-      run_order = 2
-      category  = "Approval"
-      owner     = "AWS"
-      version   = "1"
-      provider  = "Manual"
-    }
+    # action {
+    #   name      = "ManualApproval"
+    #   run_order = 2
+    #   category  = "Approval"
+    #   owner     = "AWS"
+    #   version   = "1"
+    #   provider  = "Manual"
+    # }
 
     action {
       name            = "ApplyProd"
