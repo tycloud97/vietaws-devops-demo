@@ -203,8 +203,8 @@ resource "aws_codepipeline" "codepipeline" {
       version         = "1"
       run_order       = 1
       configuration = {
-        ApplicationName     = "${var.app_name}-App"
-        DeploymentGroupName = "${var.app_name}-DG"
+        ApplicationName     = "${aws_codedeploy_app.app[0].name}"
+        DeploymentGroupName = "${aws_codedeploy_deployment_group.app_deployment_group[0].deployment_group_name}"
       }
       region = data.aws_region.current.name
     }
@@ -216,10 +216,10 @@ resource "aws_codepipeline" "codepipeline" {
       provider        = "CodeDeploy"
       input_artifacts = ["BuildArtifact"]
       version         = "1"
-      run_order       = 2
+      run_order       = 1
       configuration = {
-        ApplicationName     = "${var.app_name}-App-staging"
-        DeploymentGroupName = "${var.app_name}-DG-staging"
+        ApplicationName     = "${aws_codedeploy_app.app[0].name}"
+        DeploymentGroupName = "${aws_codedeploy_deployment_group.app_deployment_group_staging[0].deployment_group_name}"
       }
       region = data.aws_region.current.name
     }
@@ -246,8 +246,8 @@ resource "aws_codepipeline" "codepipeline" {
       version         = "1"
       run_order       = 2
       configuration = {
-        ApplicationName     = "${var.app_name}-App-prod"
-        DeploymentGroupName = "${var.app_name}-DG-prod"
+        ApplicationName     = "${aws_codedeploy_app.app[0].name}"
+        DeploymentGroupName = "${aws_codedeploy_deployment_group.app_deployment_group_prod[0].deployment_group_name}"
       }
       region = data.aws_region.current.name
     }
