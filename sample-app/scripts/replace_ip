@@ -1,4 +1,14 @@
 #!/bin/bash
-IP=$(curl http://169.254.169.254/latest/meta-data/local-hostname)
+LOCAL_HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/local-hostname)
+EC2_AVAILABILITY_ZONE=`curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone`
+EC2_REGION="`echo \"$EC2_AVAIL_ZONE\" | sed 's/[a-z]$//'`"
+LOCAL_IPV4=`curl -s http://169.254.169.254/latest/meta-data/local-ipv4`
+PUBLIC_IPV4=`curl -s http://169.254.169.254/latest/meta-data/public-ipv4`
+
 echo "$IP"
-sed -i -e "s/{{IP}}/$IP/g" /var/www/html/index.html
+sed -i -e "s/{{LOCAL_HOSTNAME}}/$LOCAL_HOSTNAME/g" /var/www/html/index.html
+sed -i -e "s/{{EC2_AVAILABILITY_ZONE}}/$EC2_AVAILABILITY_ZONE/g" /var/www/html/index.html
+sed -i -e "s/{{EC2_REGION}}/$EC2_REGION/g" /var/www/html/index.html
+sed -i -e "s/{{LOCAL_IPV4}}/$LOCAL_IPV4/g" /var/www/html/index.html
+sed -i -e "s/{{PUBLIC_IPV4}}/$PUBLIC_IPV4/g" /var/www/html/index.html
+
