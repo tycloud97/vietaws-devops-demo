@@ -360,9 +360,6 @@ resource "aws_codepipeline" "cicd_pipeline" {
       owner     = "AWS"
       version   = "1"
       provider  = "Manual"
-      configuration = {
-        "CustomData" = "Apply Dev"
-      }
     }
 
 
@@ -403,17 +400,14 @@ resource "aws_codepipeline" "cicd_pipeline" {
     }
 
 
-    action {
-      name      = "ManualApproval"
-      run_order = 2
-      category  = "Approval"
-      owner     = "AWS"
-      version   = "1"
-      provider  = "Manual"
-      configuration = {
-        "CustomData" = "Apply Staging"
-      }
-    }
+    # action {
+    #   name      = "ManualApproval"
+    #   run_order = 2
+    #   category  = "Approval"
+    #   owner     = "AWS"
+    #   version   = "1"
+    #   provider  = "Manual"
+    # }
 
 
     action {
@@ -453,9 +447,6 @@ resource "aws_codepipeline" "cicd_pipeline" {
       owner     = "AWS"
       version   = "1"
       provider  = "Manual"
-      configuration = {
-        "CustomData" = "Apply Prod"
-      }
     }
 
     action {
