@@ -28,7 +28,7 @@ variable "instance_type" {
 
 variable "app_name" {
   default = "sample-app"
-  type        = string
+  type    = string
 }
 variable "environment_name" {
   type    = string
