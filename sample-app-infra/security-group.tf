@@ -1,6 +1,6 @@
 
 resource "aws_security_group" "allow_80" {
-  name        = "${var.environment_name}-allow-http"
+  name        = "${var.environment_name}_allow_http"
   description = "Allow http inbound traffic"
   vpc_id      = module.custom_vpc.vpc_id
 
@@ -40,7 +40,7 @@ resource "aws_security_group" "allow_80" {
 }
 
 resource "aws_security_group" "allow_443" {
-  name        = "${var.environment_name}-allow-https"
+  name        = "${var.environment_name}_allow_https"
   description = "Allow https inbound traffic"
   vpc_id      = module.custom_vpc.vpc_id
 
