@@ -11,7 +11,9 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group" {
   deployment_group_name  = "${var.app_name}-DG"
   service_role_arn       = aws_iam_role.codedeploy_service.arn
   autoscaling_groups     = ["dev-asg"]
-
+  lifecycle {
+    ignore_changes = [autoscaling_groups]
+  }
   deployment_style {
     deployment_option = "WITH_TRAFFIC_CONTROL"
     deployment_type   = "BLUE_GREEN"
@@ -40,22 +42,6 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group" {
     trigger_name       = "${var.app_name}-CodeDeploy-TriggerEvents"
     trigger_target_arn = aws_sns_topic.code_deploy.arn
   }
-
-  
-  blue_green_deployment_config {
-    deployment_ready_option {
-      action_on_timeout    = "STOP_DEPLOYMENT"
-      wait_time_in_minutes = 1
-    }
-
-    green_fleet_provisioning_option {
-      action = "DISCOVER_EXISTING"
-    }
-
-    terminate_blue_instances_on_deployment_success {
-      action = "KEEP_ALIVE"
-    }
-  }
 }
 
 resource "aws_codedeploy_deployment_group" "app_deployment_group_staging" {
@@ -65,6 +51,10 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group_staging" {
   deployment_group_name  = "${var.app_name}-DG-staging"
   service_role_arn       = aws_iam_role.codedeploy_service.arn
   autoscaling_groups     = ["dev-asg"]
+
+  lifecycle {
+    ignore_changes = [autoscaling_groups]
+  }
 
   deployment_style {
     deployment_option = "WITH_TRAFFIC_CONTROL"
@@ -103,6 +93,10 @@ resource "aws_codedeploy_deployment_group" "app_deployment_group_prod" {
   deployment_group_name  = "${var.app_name}-DG-prod"
   service_role_arn       = aws_iam_role.codedeploy_service.arn
   autoscaling_groups     = ["dev-asg"]
+
+  lifecycle {
+    ignore_changes = [autoscaling_groups]
+  }
 
   deployment_style {
     deployment_option = "WITH_TRAFFIC_CONTROL"
