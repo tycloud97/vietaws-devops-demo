@@ -1,7 +1,7 @@
 #!/bin/bash
 LOCAL_HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/local-hostname)
 EC2_AVAILABILITY_ZONE=`curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone`
-EC2_REGION="`echo \"$EC2_AVAIL_ZONE\" | sed 's/[a-z]$//'`"
+EC2_REGION="`echo \"$EC2_AVAILABILITY_ZONE\" | sed 's/[a-z]$//'`"
 LOCAL_IPV4=`curl -s http://169.254.169.254/latest/meta-data/local-ipv4`
 PUBLIC_IPV4=`curl -s http://169.254.169.254/latest/meta-data/public-ipv4`
 
