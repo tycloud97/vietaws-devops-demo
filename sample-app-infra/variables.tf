@@ -1,11 +1,3 @@
-variable "environment_name" {
-  type    = string
-  default = "dev"
-}
-
-variable "vpc_cidr_block" {
-  default = "10.50.0.0/16"
-}
 
 variable "first_private_subnet_cidr" {
   default = "10.50.10.0/24"
@@ -34,12 +26,15 @@ variable "instance_type" {
   default     = "t4g.small"
 }
 
-# variable "public_key_path" {
-#   description = "Path to a public ssh key"
-#   default     = "~/.ssh/code-deploy-demo.pub"
-# }
+variable "app_name" {
+  default = "sample-app"
+  type        = string
+}
+variable "environment_name" {
+  type    = string
+  default = "dev"
+}
 
-# variable "private_key_path" {
-#   description = "Path to a private ssh key"
-#   default     = "~/.ssh/code-deploy-demo"
-# }
+variable "vpc_cidr_block" {
+  default = "10.50.0.0/16"
+}

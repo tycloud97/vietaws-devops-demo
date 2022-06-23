@@ -1,5 +1,5 @@
 resource "aws_lb" "lb" {
-  name               = "${var.environment_name}-lb"
+  name               = "${var.environment_name}-${var.app_name}-lb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.allow_80.id, aws_security_group.allow_443.id]
@@ -8,7 +8,7 @@ resource "aws_lb" "lb" {
 }
 
 resource "aws_lb_target_group" "tg" {
-  name     = "${var.environment_name}-tg"
+  name     = "${var.environment_name}-${var.app_name}-tg"
   port     = 80
   protocol = "HTTP"
   vpc_id   = module.custom_vpc.vpc_id

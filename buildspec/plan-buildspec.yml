@@ -12,3 +12,4 @@ phases:
 artifacts:
   files:
     - '**/*'
+  base-directory: 'sample-app-infra'

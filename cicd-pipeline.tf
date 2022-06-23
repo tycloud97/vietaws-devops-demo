@@ -1,6 +1,6 @@
-resource "aws_codebuild_project" "tf-plan" {
-  name         = "${var.environment_name}-tf-cicd-plan"
-  description  = "Plan stage for terraform"
+resource "aws_codebuild_project" "tf-plan-dev" {
+  name         = "${var.environment_name}-tf-plan-dev"
+  description  = "Plan dev"
   service_role = aws_iam_role.tf-codebuild-role.arn
 
   artifacts {
@@ -51,8 +51,8 @@ resource "aws_codebuild_project" "tf-plan" {
 }
 
 resource "aws_codebuild_project" "tf-plan-staging" {
-  name         = "${var.environment_name}-tf-cicd-plan-staging"
-  description  = "Plan stage for terraform"
+  name         = "${var.environment_name}-tf-plan-staging"
+  description  = "Plan staging"
   service_role = aws_iam_role.tf-codebuild-role.arn
 
   artifacts {
@@ -103,8 +103,8 @@ resource "aws_codebuild_project" "tf-plan-staging" {
 }
 
 resource "aws_codebuild_project" "tf-plan-prod" {
-  name         = "${var.environment_name}-tf-cicd-plan-prod"
-  description  = "Plan stage for terraform"
+  name         = "${var.environment_name}-tf-plan-prod"
+  description  = "Plan production"
   service_role = aws_iam_role.tf-codebuild-role.arn
 
   artifacts {
@@ -156,9 +156,9 @@ resource "aws_codebuild_project" "tf-plan-prod" {
 
 
 
-resource "aws_codebuild_project" "tf-apply" {
-  name         = "${var.environment_name}-tf-cicd-apply"
-  description  = "Apply stage for terraform"
+resource "aws_codebuild_project" "tf-apply-dev" {
+  name         = "${var.environment_name}-tf-apply-dev"
+  description  = "Apply dev"
   service_role = aws_iam_role.tf-codebuild-role.arn
 
   artifacts {
@@ -209,7 +209,7 @@ resource "aws_codebuild_project" "tf-apply" {
 
 resource "aws_codebuild_project" "tf-apply-staging" {
   name         = "${var.environment_name}-tf-cicd-apply-staging"
-  description  = "Apply stage for terraform"
+  description  = "Apply staging"
   service_role = aws_iam_role.tf-codebuild-role.arn
 
   artifacts {
@@ -260,7 +260,7 @@ resource "aws_codebuild_project" "tf-apply-staging" {
 
 resource "aws_codebuild_project" "tf-apply-prod" {
   name         = "${var.environment_name}-tf-cicd-apply-prod"
-  description  = "Apply stage for terraform"
+  description  = "Apply production"
   service_role = aws_iam_role.tf-codebuild-role.arn
 
   artifacts {
@@ -311,7 +311,7 @@ resource "aws_codebuild_project" "tf-apply-prod" {
 
 resource "aws_codepipeline" "cicd_pipeline" {
 
-  name     = "${var.environment_name}-tf-cicd"
+  name     = "${var.environment_name}-tf-cicd-pipeline"
   role_arn = aws_iam_role.tf-codepipeline-role.arn
 
   artifact_store {
@@ -338,7 +338,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
   }
 
   stage {
-    name = "Plan"
+    name = "DeployDev"
     action {
       name             = "PlanDev"
       category         = "Build"
@@ -346,14 +346,14 @@ resource "aws_codepipeline" "cicd_pipeline" {
       version          = "1"
       owner            = "AWS"
       input_artifacts  = ["tf-code"]
-      output_artifacts = ["tf-plan"]
+      output_artifacts = ["tf-plan-dev"]
       run_order        = 1
       configuration = {
-        ProjectName = "${aws_codebuild_project.tf-plan.id}"
+        ProjectName = "${aws_codebuild_project.tf-plan-dev.id}"
       }
     }
 
-   action {
+    action {
       name      = "ManualApproval"
       run_order = 2
       category  = "Approval"
@@ -361,21 +361,21 @@ resource "aws_codepipeline" "cicd_pipeline" {
       version   = "1"
       provider  = "Manual"
       configuration = {
-        "CustomData" = "Approve this AMI to be stored in the SSM Parameter For new EC2s"
+        "CustomData" = "Apply Dev"
       }
     }
 
 
     action {
-      name            = "DeployDev"
+      name            = "ApplyDev"
       category        = "Build"
       provider        = "CodeBuild"
       version         = "1"
       run_order       = 3
       owner           = "AWS"
-      input_artifacts = ["tf-plan"]
+      input_artifacts = ["tf-plan-dev"]
       configuration = {
-        ProjectName = "${aws_codebuild_project.tf-apply.id}"
+        ProjectName = "${aws_codebuild_project.tf-apply-dev.id}"
       }
     }
 
@@ -411,13 +411,13 @@ resource "aws_codepipeline" "cicd_pipeline" {
       version   = "1"
       provider  = "Manual"
       configuration = {
-        "CustomData" = "Approve this AMI to be stored in the SSM Parameter For new EC2s"
+        "CustomData" = "Apply Staging"
       }
     }
 
 
     action {
-      name            = "DeployStaging"
+      name            = "ApplyStaging"
       category        = "Build"
       provider        = "CodeBuild"
       version         = "1"
@@ -431,7 +431,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
   }
 
   stage {
-    name = "DeployProd"
+    name = "DeployProduction"
 
     action {
       name             = "PlanProd"
@@ -454,12 +454,12 @@ resource "aws_codepipeline" "cicd_pipeline" {
       version   = "1"
       provider  = "Manual"
       configuration = {
-        "CustomData" = "Approve this AMI to be stored in the SSM Parameter For new EC2s"
+        "CustomData" = "Apply Prod"
       }
     }
 
     action {
-      name            = "DeployProd"
+      name            = "ApplyProd"
       category        = "Build"
       provider        = "CodeBuild"
       version         = "1"

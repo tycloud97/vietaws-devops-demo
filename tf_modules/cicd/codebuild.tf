@@ -1,6 +1,6 @@
 resource "aws_iam_role" "codebuild_iam" {
 
-  name = "codebuild-${var.app_name}"
+  name = "${var.environment_name}-${var.app_name}-codebuild"
 
   assume_role_policy = <<EOF
 {
@@ -20,37 +20,21 @@ EOF
 
 resource "aws_iam_role_policy" "codebuild_policy" {
   role   = aws_iam_role.codebuild_iam.name
-  name   = "codebuild-policy-${var.app_name}"
+  name   = "${var.environment_name}-${var.app_name}-codebuild-policy"
   policy = <<POLICY
 {
                     "Version": "2012-10-17",
                     "Statement": [
                         {
-                        "Effect": "Allow",
-                            "Action": [
-                                "eks:DescribeNodegroup",
-                                "eks:DescribeUpdate",
-                                "eks:DescribeCluster"
-                            ],
-                            "Resource": "*"
-                        },
-                        {
                             "Effect": "Allow",
                             "Resource": [
-                              "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/viet-aws-${var.app_name}","arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/viet-aws-${var.app_name}:*",
-                              "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/viet-aws-${var.app_name}","arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/viet-aws-development-deploy-${var.app_name}:*",
-                              "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/viet-aws-${var.app_name}","arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/viet-aws-prod-deploy-${var.app_name}:*"
+                              "*"
                             ],
                             "Action": [
                                 "logs:CreateLogGroup",
                                 "logs:CreateLogStream",
                                 "logs:PutLogEvents"
                             ]
-                        },
-                        {
-                            "Effect": "Allow",
-                            "Action": "ecr:*",
-                            "Resource": "*"
                         },
                         {
                             "Effect": "Allow",
@@ -74,7 +58,7 @@ resource "aws_iam_role_policy" "codebuild_policy" {
                                 "codebuild:UpdateReport",
                                 "codebuild:BatchPutTestCases"
                             ],
-                            "Resource": "arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:report-group/viet-aws-${var.app_name}-*"
+                            "Resource": "*"
                         }
                     ]
 }
@@ -85,10 +69,10 @@ POLICY
 resource "aws_codebuild_project" "codebuild" {
   count = var.enabled ? 1 : 0
 
-  name           = "viet-aws-${var.app_name}"
+  name           = "${var.environment_name}-${var.app_name}-codebuild"
   description    = "CodeBuild project for the App- ${var.app_name}"
-  build_timeout  = "60"
-  queued_timeout = "480"
+  build_timeout  = "5"
+  queued_timeout = "5"
   service_role   = aws_iam_role.codebuild_iam.arn
   artifacts {
     type = "CODEPIPELINE"
@@ -100,14 +84,6 @@ resource "aws_codebuild_project" "codebuild" {
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
     privileged_mode             = true
-    # environment_variable {
-    #   name  = "ECR_URL"
-    #   value = aws_ecr_repository.ecr.repository_url
-    # }
-    # environment_variable {
-    #   name  = "AWS_DEFAULT_REGION"
-    #   value = data.aws_region.current.name
-    # }
   }
   source {
     type      = "CODEPIPELINE"
@@ -115,172 +91,6 @@ resource "aws_codebuild_project" "codebuild" {
   }
   source_version = var.code_commit_branch
   tags = {
-    Environment = "dev"
-  }
-}
-resource "aws_codebuild_project" "codebuild-staging" {
-  count = var.enabled ? 1 : 0
-
-  name           = "viet-aws-${var.app_name}-staging"
-  description    = "CodeBuild project for the App- ${var.app_name}"
-  build_timeout  = "60"
-  queued_timeout = "480"
-  service_role   = aws_iam_role.codebuild_iam.arn
-  artifacts {
-    type = "CODEPIPELINE"
-  }
-  badge_enabled = false
-  environment {
-    compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
-    type                        = "LINUX_CONTAINER"
-    image_pull_credentials_type = "CODEBUILD"
-    privileged_mode             = true
-    # environment_variable {
-    #   name  = "ECR_URL"
-    #   value = aws_ecr_repository.ecr.repository_url
-    # }
-    # environment_variable {
-    #   name  = "AWS_DEFAULT_REGION"
-    #   value = data.aws_region.current.name
-    # }
-  }
-  source {
-    type      = "CODEPIPELINE"
-    buildspec = "buildspec.yml"
-  }
-  source_version = var.code_commit_branch
-  tags = {
-    Environment = "dev"
-  }
-}
-resource "aws_codebuild_project" "codebuild-prod" {
-  count = var.enabled ? 1 : 0
-
-  name           = "viet-aws-${var.app_name}-prod"
-  description    = "CodeBuild project for the App- ${var.app_name}"
-  build_timeout  = "60"
-  queued_timeout = "480"
-  service_role   = aws_iam_role.codebuild_iam.arn
-  artifacts {
-    type = "CODEPIPELINE"
-  }
-  badge_enabled = false
-  environment {
-    compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
-    type                        = "LINUX_CONTAINER"
-    image_pull_credentials_type = "CODEBUILD"
-    privileged_mode             = true
-    # environment_variable {
-    #   name  = "ECR_URL"
-    #   value = aws_ecr_repository.ecr.repository_url
-    # }
-    # environment_variable {
-    #   name  = "AWS_DEFAULT_REGION"
-    #   value = data.aws_region.current.name
-    # }
-  }
-  source {
-    type      = "CODEPIPELINE"
-    buildspec = "buildspec.yml"
-  }
-  source_version = var.code_commit_branch
-  tags = {
-    Environment = "dev"
-  }
-}
-
-
-resource "aws_codebuild_project" "codebuilddevdeployment" {
-  count = var.enabled ? 1 : 0
-
-  name           = "viet-aws-development-deploy-${var.app_name}"
-  description    = "CodeBuild project for Deployment the App- ${var.app_name} in Development Namespace."
-  build_timeout  = "60"
-  queued_timeout = "480"
-  service_role   = aws_iam_role.codebuild_iam.arn
-  artifacts {
-    type = "CODEPIPELINE"
-  }
-  badge_enabled = false
-  environment {
-    compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
-    type                        = "LINUX_CONTAINER"
-    image_pull_credentials_type = "CODEBUILD"
-    privileged_mode             = true
-    environment_variable {
-      name  = "AWS_DEFAULT_REGION"
-      value = data.aws_region.current.name
-    }
-    # environment_variable {
-    #   name  = "EKS_CLUSTER_NAME"
-    #   value = var.cluster_name
-    # }
-    # environment_variable {
-    #   name  = "ECR_URL"
-    #   value = aws_ecr_repository.ecr.repository_url
-    # }
-    environment_variable {
-      name  = "SA_ROLE_ARN"
-      value = var.service_account_dev_role_arn
-    }
-  }
-
-  source {
-    type      = "CODEPIPELINE"
-    buildspec = "buildspec.yml"
-  }
-
-  source_version = var.code_commit_branch
-  tags = {
-    Environment = "dev"
-  }
-}
-
-
-resource "aws_codebuild_project" "codebuildproddeployment" {
-  count = var.enabled ? 1 : 0
-
-  name           = "viet-aws-prod-deploy-${var.app_name}"
-  description    = "CodeBuild project for Deployment the App- ${var.app_name} in Prodcution Namespace."
-  build_timeout  = "60"
-  queued_timeout = "480"
-  service_role   = aws_iam_role.codebuild_iam.arn
-  artifacts {
-    type = "CODEPIPELINE"
-  }
-  badge_enabled = false
-  environment {
-    compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
-    type                        = "LINUX_CONTAINER"
-    image_pull_credentials_type = "CODEBUILD"
-    privileged_mode             = true
-    environment_variable {
-      name  = "AWS_DEFAULT_REGION"
-      value = data.aws_region.current.name
-    }
-    # environment_variable {
-    #   name  = "EKS_CLUSTER_NAME"
-    #   value = var.cluster_name
-    # }
-    # environment_variable {
-    #   name  = "ECR_URL"
-    #   value = aws_ecr_repository.ecr.repository_url
-    # }
-    environment_variable {
-      name  = "SA_ROLE_ARN"
-      value = var.service_account_prod_role_arn
-    }
-  }
-  source {
-    type      = "CODEPIPELINE"
-    buildspec = "buildspec.yml"
-  }
-  source_version = var.code_commit_branch
-  tags = {
-    Environment = "prod"
+    Environment = "common"
   }
 }

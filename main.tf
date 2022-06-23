@@ -27,14 +27,15 @@ terraform {
 
 
 module "cicd_sample_app" {
-  enabled  = true
-  source   = "./tf_modules/cicd"
-  app_name = "sample-app"
+  enabled          = false
+  source           = "./tf_modules/cicd"
+  app_name         = "sample-app"
+  environment_name = var.environment_name
 }
 
 module "cicd_webhook" {
   source = "./tf_modules/codepipeline-git-webhook"
-  name   = "webhook-devops"
+  name   = "${var.environment_name}-webhook"
   stage  = "main"
 
   github_repositories        = ["vietaws-devops-demo"]

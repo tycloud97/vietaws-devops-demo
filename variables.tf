@@ -1,5 +1,5 @@
 variable "environment_name" {
   type        = string
-  description = "ENV"
-  default     = "share"
+  description = "Environment name"
+  default     = "common"
 }
