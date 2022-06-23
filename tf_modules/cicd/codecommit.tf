@@ -5,7 +5,7 @@ resource "aws_codecommit_repository" "codecommit" {
 
 resource "aws_cloudwatch_event_rule" "codecommit_rule" {
 
-  name        = "${var.environment_name}-codecommit-${var.app_name}"
+  name        = "${var.environment_name}-${var.app_name}-codecommit-rule"
   description = "Event Rule for any commit to codecommit of App - ${var.app_name}"
 
   event_pattern = <<EOF
@@ -32,7 +32,7 @@ resource "aws_cloudwatch_event_target" "codecommit_rule_target" {
 }
 
 resource "aws_iam_role" "cloudwatch_target_role" {
-  name = "cloudwatchtarget-${var.app_name}"
+  name = "${var.environment_name}-${var.app_name}-cloudwatchtarget"
 
   assume_role_policy = <<EOF
 {
@@ -44,6 +44,24 @@ resource "aws_iam_role" "cloudwatch_target_role" {
         "Service": "events.amazonaws.com"
       },
       "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+
+resource "aws_iam_role_policy" "cloudwatch_target_role_policy" {
+  name   = "${var.environment_name}-${var.app_name}-cloudwatchtarget"
+  role   = aws_iam_role.cloudwatch_target_role.id
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "codepipeline:StartPipelineExecution",
+      "Resource": "${aws_codepipeline.codepipeline[0].arn}"
     }
   ]
 }

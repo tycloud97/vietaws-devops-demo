@@ -41,7 +41,7 @@ EOF
 resource "aws_codepipeline" "codepipeline" {
   count = var.enabled ? 1 : 0
 
-  name     = "${var.environment_name}-codepipeline-${var.app_name}"
+  name     = "${var.environment_name}-${var.app_name}-codepipeline"
   role_arn = aws_iam_role.codepipeline_role.arn
   artifact_store {
     location = aws_s3_bucket.codepipeline_bucket.bucket

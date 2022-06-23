@@ -175,6 +175,25 @@ resource "aws_codedeploy_deployment_group" "app-deployment-group-prod" {
 resource "aws_iam_role" "codedeploy_service" {
   name = "${var.environment_name}-codedeploy-service-role"
 
+  inline_policy {
+    name = "my_inline_policy"
+
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action = [
+            "iam:PassRole",
+            "ec2:CreateTags",
+            "ec2:RunInstances"
+          ]
+          Effect   = "Allow"
+          Resource = "*"
+        },
+      ]
+    })
+  }
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

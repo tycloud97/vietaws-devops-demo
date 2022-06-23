@@ -27,7 +27,7 @@ terraform {
 
 
 module "cicd_sample_app" {
-  enabled          = false
+  enabled          = true
   source           = "./tf_modules/cicd"
   app_name         = "sample-app"
   environment_name = var.environment_name
