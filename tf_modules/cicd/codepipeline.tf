@@ -88,7 +88,7 @@ resource "aws_codepipeline" "codepipeline" {
 
   }
   stage {
-    name = "DeployNonProduction"
+    name = "DeployNonProd"
 
     action {
       name            = "DeployDev"

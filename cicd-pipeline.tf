@@ -338,7 +338,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
   }
 
   stage {
-    name = "DeployDev"
+    name = "Plan"
     action {
       name             = "PlanDev"
       category         = "Build"
@@ -352,34 +352,6 @@ resource "aws_codepipeline" "cicd_pipeline" {
         ProjectName = "${aws_codebuild_project.tf-plan-dev.id}"
       }
     }
-
-    # action {
-    #   name      = "ManualApproval"
-    #   run_order = 2
-    #   category  = "Approval"
-    #   owner     = "AWS"
-    #   version   = "1"
-    #   provider  = "Manual"
-    # }
-
-
-    action {
-      name            = "ApplyDev"
-      category        = "Build"
-      provider        = "CodeBuild"
-      version         = "1"
-      run_order       = 3
-      owner           = "AWS"
-      input_artifacts = ["tf-plan-dev"]
-      configuration = {
-        ProjectName = "${aws_codebuild_project.tf-apply-dev.id}"
-      }
-    }
-  }
-
-  stage {
-
-    name = "DeployStaging"
 
     action {
       name             = "PlanStaging"
@@ -395,7 +367,51 @@ resource "aws_codepipeline" "cicd_pipeline" {
       }
     }
 
+    action {
+      name             = "PlanProd"
+      category         = "Build"
+      provider         = "CodeBuild"
+      version          = "1"
+      owner            = "AWS"
+      run_order        = 1
+      input_artifacts  = ["tf-code"]
+      output_artifacts = ["tf-plan-prod"]
+      configuration = {
+        ProjectName = "${aws_codebuild_project.tf-plan-prod.id}"
+      }
+    }
 
+    # action {
+    #   name      = "ManualApproval"
+    #   run_order = 2
+    #   category  = "Approval"
+    #   owner     = "AWS"
+    #   version   = "1"
+    #   provider  = "Manual"
+    # }
+
+
+
+  }
+
+  stage {
+
+    name = "DeployNonProd"
+
+
+
+    action {
+      name            = "ApplyDev"
+      category        = "Build"
+      provider        = "CodeBuild"
+      version         = "1"
+      run_order       = 1
+      owner           = "AWS"
+      input_artifacts = ["tf-plan-dev"]
+      configuration = {
+        ProjectName = "${aws_codebuild_project.tf-apply-dev.id}"
+      }
+    }
     # action {
     #   name      = "ManualApproval"
     #   run_order = 2
@@ -411,7 +427,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
       category        = "Build"
       provider        = "CodeBuild"
       version         = "1"
-      run_order       = 3
+      run_order       = 1
       owner           = "AWS"
       input_artifacts = ["tf-plan-staging"]
       configuration = {
@@ -421,21 +437,9 @@ resource "aws_codepipeline" "cicd_pipeline" {
   }
 
   stage {
-    name = "DeployProduction"
+    name = "DeployProd"
 
-    action {
-      name             = "PlanProd"
-      category         = "Build"
-      provider         = "CodeBuild"
-      version          = "1"
-      owner            = "AWS"
-      run_order        = 1
-      input_artifacts  = ["tf-code"]
-      output_artifacts = ["tf-plan-prod"]
-      configuration = {
-        ProjectName = "${aws_codebuild_project.tf-plan-prod.id}"
-      }
-    }
+
     # action {
     #   name      = "ManualApproval"
     #   run_order = 2
