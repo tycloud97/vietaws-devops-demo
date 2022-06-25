@@ -63,6 +63,6 @@ resource "aws_key_pair" "main" {
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCfa4qkxGj8cFfJZ30/ZKt69rvfhFxtN6ChS2K8roBGD18Gua1VseCd7MjRaBKjW2HUu7kwPpuFIZabH4X3UJA/TPBWCLBYKzcdfhaxS8oLjqDxumJjT9+JatuAXaVqkAz3YVHlX5Q5ulBjT551Fm0Ke0GGg9X3Cbwwi4zCE5QJnypO41D+acEI3AmHxkA6DI51OccZ6L7kvgcN5kIM0BEU9BCeJe2GOa9pPqG0PT7e6vKWp9NwLwP3SvBWz4AHaFBZsyHahP2LK9JPCbjrlYSkT1bMhLKu1Bcm4YWtmC2hMC7qL77tF4mql16V1nZsdsmAROgLWllpfzRXBvpMb/gBdotNIT7IymbwU6z/bWX1NP/b5AoUTLXyhW/ERyFEJTHiOkBCLI6uTUiWjeDD4t6a/xvpahWgGiBnyfymLovhcRe9cA7n39xAdr6evs4r15BJ70A3HRFLVn7JklXSHg39DY4WoZdERPc8bY5GPLvjEhcLnq+ikPR/wV1RW7nUwU8= cd-demo"
 }
 
-# resource "aws_s3_bucket" "bucket" {
-#   bucket = "${var.environment_name}-${var.app_name}-vietaws"
-# }
+resource "aws_s3_bucket" "bucket" {
+  bucket = "${var.environment_name}-${var.app_name}-vietaws"
+}
